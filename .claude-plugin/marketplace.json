@@ -1,0 +1,14 @@
+{
+  "name": "agent-observatory",
+  "owner": {
+    "name": "Agent Observatory"
+  },
+  "plugins": [
+    {
+      "name": "agent-observatory",
+      "source": "./plugin",
+      "description": "Local agent hierarchy, timeline and tool activity dashboard",
+      "version": "0.2.0"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# Build and runtime
+node_modules/
+.runtime/
+artifacts/
+coverage/
+*.log
+*.jsonl
+*.ndjson
+*.sqlite
+*.sqlite3
+*.db
+.DS_Store
+
+# Local configuration and secrets
+.claude/
+.agent-observatory/
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.credentials
+*.secrets
+
+# Personal exports and local scratch
+backups/
+exports/
+local/

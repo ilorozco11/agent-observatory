@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" fill="none">
+  <title>Agent Observatory — original office floor plan</title>
+  <defs>
+    <pattern id="tiles" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" stroke="#d9d9d3" stroke-width=".6"/></pattern>
+    <pattern id="rug" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0L8 8M-4 4L4 12M4-4L12 4" stroke="#d5d5cf" stroke-width=".6"/></pattern>
+    <g id="desk"><rect x="-49" y="-24" width="98" height="52" rx="3" fill="#b6b6ad"/><rect x="-49" y="-29" width="98" height="49" rx="3" fill="#ecece7" stroke="#a4a49b"/><path d="M-42 29V39M42 29V39" stroke="#96968b" stroke-width="5"/><rect x="-22" y="-23" width="43" height="26" rx="2" fill="#45453f"/><rect x="-18" y="-19" width="35" height="18" rx="1" fill="#bcbcb1"/><path d="M-11-14H4M-11-10H12M-11-6H-1" stroke="#6f6f66" stroke-width="2"/><path d="M0 3V8M-9 9H9" stroke="#77776d" stroke-width="3"/><rect x="-18" y="11" width="35" height="7" rx="1" fill="#a9a99f"/><rect x="27" y="-9" width="12" height="17" rx="1" fill="#fff" stroke="#c4c4bb"/><path d="M30-4H35M30 0H35" stroke="#aaa99f"/><rect x="-38" y="-15" width="9" height="11" rx="2" fill="#909086"/><path d="M-29-12h3v6h-3" stroke="#909086" stroke-width="2"/><ellipse cy="44" rx="20" ry="7" fill="#a5a59a" opacity=".2"/><rect x="-15" y="32" width="30" height="23" rx="8" fill="#75756d"/><path d="M-12 48H12" stroke="#50504a" stroke-width="2"/></g>
+    <g id="plant"><ellipse cy="17" rx="16" ry="5" fill="#aaa99e" opacity=".2"/><path d="M-10 4L-7 20H7L10 4" fill="#b1b1a7"/><ellipse cy="4" rx="10" ry="4" fill="#8b8b80"/><path d="M0 6C-22-5-17-24-3-11C-11-33 7-34 7-12C20-29 30-12 4 6Z" fill="#777c70"/><path d="M0 7L-5-15M0 7L9-17" stroke="#50584a" stroke-width="1.5"/></g>
+    <g id="chair"><ellipse cy="16" rx="17" ry="5" fill="#aaa99e" opacity=".2"/><rect x="-15" y="-10" width="30" height="32" rx="8" fill="#9b9b90"/><rect x="-15" y="-10" width="30" height="10" rx="5" fill="#74746a"/></g>
+  </defs>
+  <rect width="1000" height="650" fill="#f1f1ec"/>
+  <path d="M29 49H971V614H29Z" fill="#b5b5aa"/>
+  <path d="M29 43H971V602H29Z" fill="#e6e6df" stroke="#a0a096" stroke-width="2"/>
+  <path d="M29 43H971V602H29Z" fill="url(#tiles)"/>
+  <path d="M29 43V24H971V43" fill="#d0d0c6" stroke="#aaa99f"/>
+  <path d="M29 43V602H17V32Z" fill="#bfbfb4"/><path d="M971 43V602H983V32Z" fill="#c9c9bf"/>
+  <path d="M54 25H272V41H54Z" fill="#f8f8f4" stroke="#adada2"/><path d="M163 25V41" stroke="#b5b5a9"/>
+  <path d="M379 25H597V41H379Z" fill="#f8f8f4" stroke="#adada2"/><path d="M488 25V41" stroke="#b5b5a9"/>
+  <path d="M704 25H922V41H704Z" fill="#f8f8f4" stroke="#adada2"/><path d="M813 25V41" stroke="#b5b5a9"/>
+  <path d="M64 43L94 98H290L260 43M389 43L419 98H615L585 43M714 43L744 98H940L910 43" fill="#fff" opacity=".18"/>
+  <rect x="56" y="88" width="518" height="276" rx="6" fill="#deded5"/>
+  <rect x="56" y="88" width="518" height="276" rx="6" fill="url(#rug)"/>
+  <use href="#desk" x="146" y="142"/><use href="#desk" x="313" y="142"/><use href="#desk" x="480" y="142"/>
+  <use href="#desk" x="146" y="276"/><use href="#desk" x="313" y="276"/><use href="#desk" x="480" y="276"/>
+  <path d="M615 65V378" stroke="#c9c9be" stroke-width="3"/><path d="M615 65V378" stroke="#b8b8ac" stroke-dasharray="2 8"/>
+  <rect x="650" y="91" width="285" height="26" rx="2" fill="#aaa99c"/>
+  <rect x="650" y="81" width="285" height="28" rx="2" fill="#d7d7cb" stroke="#9f9f91"/>
+  <g stroke="#efefe8" stroke-width="7"><path d="M665 85V104M676 85V104M687 85V104M704 85V104M719 85V104M730 85V104M754 85V104M767 85V104M779 85V104M796 85V104M819 85V104M830 85V104M847 85V104M858 85V104M877 85V104M890 85V104M902 85V104M919 85V104"/></g>
+  <path d="M695 85L698 104M743 85L748 104M807 85L811 104M866 85L871 104" stroke="#77786b" stroke-width="6"/>
+  <rect x="692" y="151" width="198" height="64" rx="24" fill="#bcbcb0"/><rect x="692" y="145" width="198" height="61" rx="24" fill="#e4e4da" stroke="#b2b2a5"/>
+  <path d="M745 160L766 156L786 160V188L766 184L745 188ZM766 156V184" fill="#fafaf5" stroke="#acada0"/>
+  <path d="M797 170H833M797 176H825" stroke="#b5b5a7" stroke-width="3"/>
+  <use href="#plant" x="930" y="203"/>
+  <rect x="650" y="289" width="285" height="45" rx="3" fill="#a7a79c"/><rect x="650" y="281" width="285" height="44" rx="3" fill="#d4d4c8" stroke="#a4a498"/>
+  <g fill="#42453d"><rect x="671" y="262" width="62" height="38" rx="2"/><rect x="762" y="262" width="62" height="38" rx="2"/><rect x="853" y="262" width="62" height="38" rx="2"/></g>
+  <g stroke="#a8b09c" stroke-width="2"><path d="M680 274L685 278L680 282M690 282H704M771 274H811M771 281H800M771 288H806M862 274H899M862 281H889M862 288H903"/></g>
+  <path d="M702 300V306M793 300V306M884 300V306" stroke="#72766a" stroke-width="4"/>
+  <g fill="#aaa99a"><rect x="678" y="309" width="49" height="8" rx="2"/><rect x="769" y="309" width="49" height="8" rx="2"/><rect x="860" y="309" width="49" height="8" rx="2"/></g>
+  <path d="M55 394H935" stroke="#c9c9be" stroke-width="2"/>
+  <rect x="57" y="434" width="267" height="135" rx="4" fill="#dcdcd1"/>
+  <rect x="83" y="423" width="208" height="33" rx="3" fill="#8c8e81"/>
+  <rect x="87" y="416" width="200" height="31" rx="2" fill="#f4f4ec" stroke="#979a8a"/>
+  <path d="M108 425H146M108 432H134M202 424H247M202 432H257" stroke="#a7ab99" stroke-width="2"/><path d="M159 428H186M180 423L186 428L180 433" stroke="#636c59" stroke-width="1.5"/>
+  <rect x="112" y="486" width="156" height="54" rx="22" fill="#b3b3a7"/><rect x="112" y="481" width="156" height="51" rx="22" fill="#e9e9e0" stroke="#aaa99d"/><rect x="172" y="494" width="34" height="22" fill="#fff" stroke="#cccbbf"/>
+  <use href="#chair" x="82" y="501"/><use href="#chair" x="300" y="501"/>
+  <rect x="365" y="435" width="217" height="133" rx="4" fill="#e4e4db" stroke="#c3c3b7" stroke-dasharray="4 5"/>
+  <rect x="401" y="453" width="144" height="24" rx="3" fill="#c0c0b3"/><rect x="401" y="447" width="144" height="23" rx="3" fill="#efefe6" stroke="#b2b3a3"/>
+  <rect x="460" y="438" width="27" height="18" rx="2" fill="#646b5b"/><path d="M469 444L477 449L469 453Z" fill="#dadfcf"/>
+  <path d="M447 602V608H504V602" fill="#f1f1ec"/><path d="M448 602V577M448 577A25 25 0 0 1 473 602" stroke="#979a89"/>
+  <rect x="641" y="432" width="294" height="138" rx="4" fill="#dcdcd0"/>
+  <rect x="666" y="449" width="110" height="42" rx="10" fill="#a1a493"/><rect x="671" y="452" width="100" height="29" rx="6" fill="#c0c3b3"/><path d="M721 454V481" stroke="#a1a493"/>
+  <rect x="824" y="449" width="86" height="42" rx="10" fill="#a1a493"/><rect x="829" y="452" width="76" height="29" rx="6" fill="#c0c3b3"/>
+  <rect x="751" y="511" width="91" height="28" rx="14" fill="#b9bbab"/><rect x="751" y="506" width="91" height="26" rx="13" fill="#eeeee4" stroke="#aaad9b"/><circle cx="798" cy="517" r="6" fill="#91977f"/><circle cx="798" cy="516" r="3" fill="#d5d9c8"/>
+  <use href="#plant" x="675" y="548"/><use href="#plant" x="922" y="548"/><use href="#plant" x="587" y="78"/>
+  <path d="M38 620H433M520 620H962" stroke="#c3c3b6"/><text x="474" y="631" text-anchor="middle" fill="#8b8f7e" font-family="monospace" font-size="8" letter-spacing="2">AGENT OBSERVATORY</text>
+</svg>

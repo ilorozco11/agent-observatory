@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Văn phòng ảo realtime của Agent Observatory. Theo dõi hoạt động được ghi nhận của Claude Code agents.">
+  <title>Văn phòng agents · Agent Observatory</title>
+  <link rel="stylesheet" href="./office.css">
+  <script type="module" src="./office.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#office-main">Đến văn phòng agents</a>
+  <header class="topbar">
+    <a class="brand" id="dashboard-link" href="./" aria-label="Về dashboard Agent Observatory"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>AGENT OBSERVATORY<small>VIRTUAL OFFICE / 02</small></span></a>
+    <div class="topbar-center"><span class="connection-dot" id="connection-dot"></span><span id="connection-label">Đang kết nối</span><span class="topbar-divider"></span><span id="local-clock">—</span></div>
+    <div class="topbar-actions"><button id="theme-button" class="icon-button" type="button" aria-label="Chuyển sang giao diện tối" title="Chuyển giao diện">◐</button><button id="pause-button" class="button" type="button" aria-pressed="false"><span id="pause-icon" aria-hidden="true">Ⅱ</span><span id="pause-label">Tạm dừng màn hình</span></button><button id="refresh-button" class="button primary" type="button" aria-label="Làm mới dữ liệu">↻ <span>Làm mới</span></button></div>
+  </header>
+  <main id="office-main">
+    <section class="page-heading"><div><div class="eyebrow">CÙNG MỘT VĂN PHÒNG. MỖI NGƯỜI MỘT VIỆC.</div><h1>Văn phòng agents<span>.</span></h1><p>Nhìn công việc diễn ra, biết khi nào cần bạn.</p></div><div class="office-summary" id="office-summary" aria-live="polite">Đang nhận dữ liệu…</div></section>
+    <div class="notice demo-notice" id="demo-notice" hidden><strong>DỮ LIỆU MẪU</strong><span id="demo-description">Các hoạt động minh họa, không phải agent thật trên máy của bạn.</span></div>
+    <div class="notice" id="connection-notice" hidden><strong id="connection-heading">Kết nối</strong><span id="connection-message"></span><button class="text-button" id="retry-button" type="button">Thử lại</button></div>
+    <div class="notice paused-notice" id="paused-notice" hidden><strong>MÀN HÌNH ĐANG DỪNG</strong><span>Agents vẫn làm việc. Bản cập nhật mới nhất sẽ xuất hiện khi tiếp tục.</span></div>
+    <section class="toolbar" aria-label="Lọc văn phòng"><div class="filter-field"><label for="project-filter">Dự án</label><select id="project-filter"><option value="">Tất cả dự án</option></select></div><div class="filter-field"><label for="session-filter">Phiên</label><select id="session-filter"><option value="">Tất cả phiên</option></select></div><label class="search-field" for="search-input"><span aria-hidden="true">⌕</span><span class="sr-only">Tìm agent hoặc công việc</span><input id="search-input" type="search" placeholder="Tìm agent, task, tool…" autocomplete="off"><kbd aria-hidden="true">/</kbd></label><label class="check-field" for="show-completed"><input id="show-completed" type="checkbox" checked>Hiện đã kết thúc</label><button class="text-button" id="reset-button" type="button" hidden>Xóa bộ lọc</button></section>
+    <div class="office-layout">
+      <section class="office-panel" aria-labelledby="scene-heading">
+        <div class="scene-header"><div><span class="section-index">01</span><h2 id="scene-heading">Tầng làm việc</h2><span class="count-tag" id="map-count">—</span></div><span id="scene-caption">Chọn một nhân vật để xem chi tiết</span></div>
+        <div class="scene-scroll" tabindex="0" aria-label="Bản đồ văn phòng, có thể cuộn ngang trên màn hình nhỏ">
+          <div class="office-world" id="office-world">
+            <img class="office-art" src="./office-scene.svg" alt="Sơ đồ văn phòng với bàn làm việc, thư viện, terminal, bảng phối hợp, khu chờ và phòng nghỉ" draggable="false">
+            <div class="room-label label-desk"><span>01</span>BÀN LÀM VIỆC</div><div class="room-label label-library"><span>02</span>THƯ VIỆN</div><div class="room-label label-terminal"><span>03</span>TERMINAL</div><div class="room-label label-meeting"><span>04</span>PHỐI HỢP</div><div class="room-label label-waiting"><span>05</span>CHỜ BẠN</div><div class="room-label label-lounge"><span>06</span>PHÒNG NGHỈ</div>
+            <div class="agent-layer" id="agent-layer" role="group" aria-label="Agents trong văn phòng"></div>
+            <div class="scene-empty" id="scene-empty" hidden><div class="empty-mark" aria-hidden="true">[ · · ]</div><h3 id="empty-title">Văn phòng đang trống</h3><p id="empty-copy">Nạp plugin trong Claude Code để nhận hoạt động agent.</p></div>
+          </div>
+        </div>
+        <div class="scene-footer"><div class="legend"><span><i class="legend-dot"></i>Hoạt động</span><span><i class="legend-wait">!</i>Chờ / cần chú ý</span><span><i class="legend-idle"></i>Tạm nghỉ / kết thúc</span></div><span id="motion-note">Di chuyển minh họa theo hoạt động được ghi nhận</span></div>
+        <section class="demo-player" id="demo-player" aria-label="Phát lại dữ liệu mẫu" hidden><div class="demo-player-heading"><span class="tiny-label">PHÁT LẠI MẪU</span><strong id="frame-label">—</strong><span class="mono" id="frame-count">—</span></div><div class="demo-player-controls"><button class="icon-button" id="demo-prev" type="button" aria-label="Bước mẫu trước">←</button><button class="button primary" id="demo-play" type="button" aria-pressed="true">Dừng phát lại</button><label class="sr-only" for="demo-range">Bước trong kịch bản mẫu</label><input type="range" id="demo-range" min="0" max="0" value="0"><button class="icon-button" id="demo-next" type="button" aria-label="Bước mẫu tiếp theo">→</button></div></section>
+        <section class="roster-section" aria-labelledby="roster-title"><header><h3 id="roster-title">Đồng nghiệp trong bộ lọc</h3><span id="overflow-note"></span></header><div id="agent-roster" class="agent-roster"></div></section>
+      </section>
+      <aside class="inspector" aria-label="Chi tiết agent"><div class="inspector-heading"><span class="tiny-label">02 / GÓC NHÌN GẦN</span><span id="inspector-indicator">—</span></div><div id="inspector-content"><div class="inspector-empty"><div class="empty-mark" aria-hidden="true">[ · · ]</div><h2>Gặp một agent</h2><p>Chọn nhân vật hoặc tên trong danh sách để xem công việc và bằng chứng hoạt động.</p></div></div></aside>
+    </div>
+    <section class="activity-strip" aria-labelledby="activity-heading"><h2 id="activity-heading">VỪA DIỄN RA</h2><div id="recent-events" class="recent-events"><span class="muted">Chưa có sự kiện.</span></div></section>
+    <footer class="page-footer"><span id="updated-at">Chưa nhận dữ liệu</span><span>Hiển thị hoạt động quan sát được; không hiển thị nội dung suy nghĩ riêng tư.</span><span id="timezone-label"></span></footer>
+    <div class="sr-only" role="status" aria-live="polite" id="announcement"></div>
+  </main>
+</body>
+</html>

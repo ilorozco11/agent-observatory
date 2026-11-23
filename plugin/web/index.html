@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Agent Observatory — bảng theo dõi agents Claude Code trên máy của bạn.">
+  <title>Agent Observatory</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <aside class="sidebar" aria-label="Điều hướng chính">
+    <a class="brand" href="./" aria-label="Agent Observatory — Tổng quan">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="brand-text">AGENT<br>OBSERVATORY<span class="brand-version">CLAUDE CODE MOD / 02</span></span>
+    </a>
+    <div class="nav-label">KHÔNG GIAN LÀM VIỆC</div>
+    <nav class="navigation">
+      <button class="nav-item active" data-view="overview" aria-current="page"><span data-icon="overview"></span><span>Tổng quan</span><span class="nav-index">01</span></button>
+      <button class="nav-item" data-view="timeline"><span data-icon="timeline"></span><span>Dòng thời gian</span><span class="nav-index">02</span></button>
+      <button class="nav-item" data-view="activity"><span data-icon="activity"></span><span>Hoạt động</span><span class="nav-index">03</span></button>
+      <a class="nav-item office-launch" id="office-window-link" href="/office" target="agent-observatory-office" rel="noopener" aria-label="Mở văn phòng ảo trong cửa sổ riêng" title="Văn phòng ảo · cửa sổ riêng"><span data-icon="layers"></span><span>Văn phòng ảo</span><span class="nav-index" aria-hidden="true">↗</span></a>
+    </nav>
+    <section class="sidebar-scope" aria-label="Nguồn dữ liệu">
+      <span class="tiny-label">NGUỒN THEO DÕI</span>
+      <div class="source-name"><span class="source-dot"></span>Claude Code</div>
+      <p>Dữ liệu trên máy của bạn.<br>Quan sát, không điều khiển agent.</p>
+    </section>
+    <div class="sidebar-bottom">
+      <div class="sidebar-line"></div>
+      <span class="tiny-label">NHÌN RÕ CÔNG VIỆC.</span>
+      <p>Biết ai đang làm gì,<br>và việc nào cần bạn.</p>
+      <span class="local-tag"><span data-icon="lock"></span>LOCAL OBSERVABILITY</span>
+    </div>
+  </aside>
+
+  <main id="main" class="main" tabindex="-1">
+    <header class="page-header">
+      <div>
+        <div class="eyebrow">WORKSPACE <span>/</span> AGENT OPERATIONS</div>
+        <h1 id="page-title">Tổng quan agents<span class="title-dot">.</span></h1>
+        <p class="subtitle" id="page-subtitle">Mỗi agent, mỗi bước làm việc. Trong cùng một góc nhìn.</p>
+      </div>
+      <div class="header-actions">
+        <div class="freshness" id="connection-status"><span class="connection-dot"></span><span id="connection-label">Đang kết nối</span></div>
+        <div class="header-buttons">
+          <button class="button icon-button" id="theme-button" type="button" aria-label="Chuyển sang giao diện tối" title="Chuyển giao diện"><span data-icon="moon"></span></button>
+          <button class="button" id="pause-button" type="button" aria-label="Tạm dừng cập nhật màn hình" aria-pressed="false" title="Chỉ tạm dừng cập nhật màn hình; agents vẫn tiếp tục làm việc"><span data-icon="pause"></span><span id="pause-label">Tạm dừng cập nhật</span></button>
+          <button class="button primary" id="refresh-button" type="button" aria-label="Làm mới dữ liệu"><span data-icon="refresh"></span>Làm mới</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="notice demo-notice" id="demo-notice" hidden><span data-icon="info"></span><div><strong>Dữ liệu mẫu</strong><span> · Mô phỏng để khám phá giao diện. Không phải hoạt động agent thật.</span></div><a href="./" id="live-link">Mở dữ liệu thật <span aria-hidden="true">↗</span></a></div>
+    <div class="notice connection-notice" id="connection-notice" hidden><span data-icon="warning"></span><p id="connection-message"></p><button type="button" class="text-button" id="retry-button">Thử lại</button></div>
+    <div class="notice paused-notice" id="paused-notice" hidden><span data-icon="pause"></span><span>Màn hình đang giữ nguyên dữ liệu. Các agent vẫn tiếp tục làm việc.</span></div>
+
+    <section class="filters" aria-label="Bộ lọc toàn dashboard">
+      <div class="search-control"><span data-icon="search"></span><label class="sr-only" for="search-input">Tìm agent hoặc công việc</label><input type="search" id="search-input" placeholder="Tìm agent, công việc, model…" autocomplete="off"><kbd aria-hidden="true">/</kbd></div>
+      <div class="select-control"><label for="project-filter">Dự án</label><select id="project-filter" aria-label="Lọc theo dự án"><option value="">Tất cả dự án</option></select></div>
+      <div class="select-control"><label for="session-filter">Phiên</label><select id="session-filter" aria-label="Lọc theo phiên"><option value="">Tất cả phiên</option></select></div>
+      <div class="select-control"><label for="status-filter">Trạng thái</label><select id="status-filter" aria-label="Lọc theo trạng thái"><option value="">Tất cả trạng thái</option><option value="running">Đang làm</option><option value="waiting">Chờ bạn</option><option value="error">Có lỗi</option><option value="idle">Tạm nghỉ</option><option value="completed">Đã kết thúc</option><option value="unknown">Chưa rõ</option></select></div>
+      <button type="button" class="text-button reset-button" id="reset-filters" hidden>Xóa bộ lọc <span aria-hidden="true">×</span></button>
+    </section>
+
+    <section class="metrics" aria-label="Tổng hợp theo bộ lọc">
+      <div class="metric"><div class="metric-label"><span class="status-symbol running" aria-hidden="true">●</span>Đang làm việc</div><div class="metric-value" id="metric-running">—</div><div class="metric-note" id="metric-running-note">Chưa nhận dữ liệu</div></div>
+      <div class="metric"><div class="metric-label"><span class="status-symbol waiting" aria-hidden="true">◐</span>Cần chú ý</div><div class="metric-value" id="metric-attention">—</div><div class="metric-note" id="metric-attention-note">Chờ phản hồi hoặc có lỗi</div></div>
+      <div class="metric"><div class="metric-label"><span data-icon="tool"></span>Tool calls</div><div class="metric-value" id="metric-tools">—</div><div class="metric-note">Đã ghi nhận trong bộ lọc</div></div>
+      <div class="metric"><div class="metric-label"><span data-icon="layers"></span>Phiên làm việc</div><div class="metric-value" id="metric-sessions">—</div><div class="metric-note" id="metric-sessions-note">Tất cả dự án</div></div>
+    </section>
+
+    <div class="workspace-grid">
+      <div class="work-surface">
+        <section class="panel agent-panel" id="agents-section" aria-labelledby="agents-title">
+          <header class="section-header"><div><span class="section-number">01</span><h2 id="agents-title">Đội ngũ agents</h2><span class="count-tag" id="agent-count">—</span></div><span class="section-caption">Nhấn vào agent để xem chi tiết</span></header>
+          <div class="agent-table-head" aria-hidden="true"><span>AGENT / CÔNG VIỆC</span><span>TRẠNG THÁI</span><span>TOOLS</span><span>THỜI GIAN</span><span></span></div>
+          <div id="agent-list" class="agent-list" aria-label="Danh sách agents"></div>
+          <div class="panel-footer"><span id="filter-summary">Đang lấy dữ liệu…</span><span class="text-mono">PARENT → CHILD</span></div>
+        </section>
+
+        <section class="panel timeline-panel" id="timeline-section" aria-labelledby="timeline-title">
+          <header class="section-header"><div><span class="section-number">02</span><h2 id="timeline-title">Nhịp làm việc</h2></div><span class="section-caption" id="timeline-range">Thời gian từ dữ liệu</span></header>
+          <div class="timeline-legend"><span><i class="legend-mark solid"></i>Tool đang chạy</span><span><i class="legend-mark muted"></i>Tool đã chạy</span><span><i class="legend-mark patterned"></i>Có lỗi</span><span><i class="legend-mark life"></i>Vòng đời agent</span></div>
+          <div id="timeline" class="timeline" aria-label="Dòng thời gian của agents"></div>
+          <div class="panel-footer"><span>Cùng thang thời gian cho mọi agent</span><span id="timeline-history-note">Khoảng trống = không có tool ghi nhận</span></div>
+        </section>
+
+        <section class="panel activity-panel" id="activity-section" aria-labelledby="activity-title">
+          <header class="section-header"><div><span class="section-number">03</span><h2 id="activity-title">Luồng hoạt động</h2><span class="count-tag" id="event-count">—</span></div><span class="section-caption">Mới nhất trước</span></header>
+          <div id="activity-list" class="activity-list"></div>
+          <div class="panel-footer"><span id="activity-limit">Tối đa 80 sự kiện gần nhất trong bộ lọc</span><span>Quan sát trực tiếp</span></div>
+        </section>
+      </div>
+
+      <aside class="inspector" id="inspector" aria-label="Chi tiết agent">
+        <div class="inspector-empty" id="inspector-empty"><span data-icon="cursor"></span><h2>Đi sâu vào một agent</h2><p>Chọn một agent để xem công việc, tool calls, các tệp và sự kiện liên quan.</p></div>
+        <div id="inspector-content" hidden></div>
+      </aside>
+    </div>
+
+    <footer class="page-footer"><span id="updated-at">Chưa có bản cập nhật</span><span id="timezone-label"></span><span>Không thu thập prompt hoặc nội dung tool đầy đủ.</span></footer>
+    <div class="sr-only" role="status" aria-live="polite" id="announcement"></div>
+  </main>
+</body>
+</html>

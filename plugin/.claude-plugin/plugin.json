@@ -1,0 +1,7 @@
+{
+  "name": "agent-observatory",
+  "version": "0.2.0",
+  "description": "A local agent dashboard: live session and subagent activity, tool evidence, task status, and a native Claude Code pane.",
+  "license": "MIT",
+  "keywords": ["agents", "dashboard", "observability", "local", "mod"]
+}

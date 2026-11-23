@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Agent Observatory — bảng theo dõi agents Claude Code trên máy của bạn.">
+  <title>Agent Observatory</title>
+  <style>@charset "UTF-8";
+:root{color-scheme:light;--page:#f6f6f6;--surface:#fff;--ink:#171717;--muted:#626262;--soft:#eeeeee;--selected:#e8e8e8;--line:#d8d8d8;--boundary:#8a8a8a;--inverse:#fff;--black:#171717;--focus:#171717;--track:#e9e9e9;--shadow:0 8px 32px #00000008;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-synthesis:none;font-size:14px}
+:root[data-theme=dark]{color-scheme:dark;--page:#121212;--surface:#1b1b1b;--ink:#f4f4f4;--muted:#b4b4b4;--soft:#272727;--selected:#333;--line:#3d3d3d;--boundary:#8a8a8a;--inverse:#171717;--black:#f4f4f4;--focus:#fff;--track:#303030;--shadow:none}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);line-height:1.5}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:wait}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:4px}button:focus:not(:focus-visible){outline:none}[hidden]{display:none!important}svg{width:18px;height:18px;display:block;flex:none}button svg{pointer-events:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip-link{position:fixed;z-index:50;top:-80px;left:20px;padding:12px;background:var(--black);color:var(--inverse)}.skip-link:focus{top:16px}
+.sidebar{position:fixed;inset:0 auto 0 0;width:208px;background:var(--surface);border-right:1px solid var(--line);padding:32px 18px 22px;display:flex;flex-direction:column;z-index:20}.brand{display:flex;align-items:flex-start;gap:12px;text-decoration:none;padding:0 8px}.brand-mark{width:34px;height:36px;flex:none;display:grid;grid-template-columns:repeat(3,8px);gap:4px;align-items:end;margin-top:3px}.brand-mark span{display:block;background:var(--black);height:24px}.brand-mark span:nth-child(2){height:36px}.brand-mark span:nth-child(3){height:16px}.brand-text{font-size:12px;line-height:1.35;font-weight:850;letter-spacing:.04em}.brand-version{display:block;font-size:8px;letter-spacing:.05em;color:var(--muted);margin-top:9px;white-space:nowrap;font-weight:500}.nav-label{font-size:9px;letter-spacing:.13em;color:var(--muted);font-weight:650;padding:0 12px;margin:55px 0 14px}.navigation{display:flex;flex-direction:column;gap:5px}.nav-item{display:flex;align-items:center;gap:10px;border:0;background:transparent;color:var(--muted);padding:12px 11px;width:100%;text-align:left;font-size:12px;line-height:1.5;min-height:44px;transition:background .12s}.nav-item:hover{background:var(--soft);color:var(--ink)}.nav-item.active{background:var(--black);color:var(--inverse)}.nav-item svg{width:16px;height:16px}.nav-index{margin-left:auto;opacity:.65;font-variant-numeric:tabular-nums;font-size:10px}.sidebar-scope{border-top:1px solid var(--line);margin:28px 11px 0;padding-top:22px}.tiny-label{font-size:9px;font-weight:650;letter-spacing:.13em;color:var(--muted)}.source-name{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;margin-top:12px}.source-dot{width:6px;height:6px;background:var(--black);display:inline-block}.sidebar-scope p,.sidebar-bottom p{font-size:11px;line-height:1.8;color:var(--muted);margin:9px 0 0}.sidebar-bottom{margin-top:auto;padding:0 11px}.sidebar-line{width:24px;height:2px;background:var(--ink);margin:30px 0 18px}.local-tag{display:flex;gap:6px;align-items:center;margin-top:24px;font-size:8px;font-weight:550;letter-spacing:.07em;color:var(--muted)}.local-tag svg{width:12px;height:12px}
+.main{margin-left:208px;padding:35px 32px 20px;max-width:2000px}.page-header{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:30px}.eyebrow{font-size:10px;letter-spacing:.12em;font-weight:600;color:var(--muted);margin:0 0 12px}.eyebrow span{margin:0 8px;color:var(--boundary)}h1{font-size:29px;line-height:1.25;letter-spacing:-1px;margin:0;font-weight:680}.title-dot{font-weight:900}.subtitle{font-size:12px;color:var(--muted);margin:9px 0 0}.header-actions{display:flex;flex-direction:column;align-items:flex-end;gap:16px;padding-top:2px}.freshness{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--muted)}.connection-dot{width:6px;height:6px;display:inline-block;background:var(--ink);border-radius:50%}.freshness.is-live .connection-dot{box-shadow:0 0 0 3px var(--line)}.freshness.is-stale .connection-dot{background:transparent;border:1px solid var(--ink)}.freshness.is-offline .connection-dot{border-radius:0;background:repeating-linear-gradient(45deg,var(--ink) 0,var(--ink) 1px,transparent 1px,transparent 3px);border:1px solid var(--ink)}.header-buttons{display:flex;gap:8px}.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--boundary);background:var(--surface);color:var(--ink);border-radius:2px;min-height:36px;padding:7px 11px;font-size:11px;font-weight:550;white-space:nowrap}.button:hover{background:var(--soft)}.button.primary{background:var(--black);color:var(--inverse);border-color:var(--black)}.button.primary:hover{opacity:.85}.button svg{width:14px;height:14px}.button[aria-pressed=true]{background:var(--selected);border-color:var(--ink)}.icon-button{padding:8px;min-width:36px}.text-button{border:0;background:transparent;color:var(--ink);font-size:11px;text-decoration:underline;text-underline-offset:3px;padding:8px 0;min-height:36px;white-space:nowrap}.notice{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-left:3px solid var(--ink);padding:12px 15px;background:var(--surface);font-size:12px;margin-bottom:18px}.notice svg{width:16px;height:16px}.notice a{margin-left:auto;font-size:11px;white-space:nowrap}.notice p{margin:0;flex:1}.notice strong{font-weight:650}.demo-notice{background:var(--soft)}.paused-notice{border-style:dashed;border-left-style:solid}
+.filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}.search-control{position:relative;display:flex;align-items:center;flex:1;min-width:185px;height:40px;border:1px solid var(--boundary);background:var(--surface);border-radius:2px;gap:8px;padding:0 11px}.search-control svg{width:15px;height:15px;color:var(--muted)}.search-control input{border:0;background:transparent;outline:none;color:var(--ink);min-width:0;width:100%;font-size:12px;height:100%}.search-control input::placeholder{color:var(--muted)}.search-control:focus-within{outline:2px solid var(--focus);outline-offset:2px}.search-control input:focus-visible{outline:none}.search-control kbd{display:block;border:1px solid var(--line);color:var(--muted);font-size:10px;padding:0 5px;line-height:18px}.select-control{position:relative;display:flex;align-items:center;border:1px solid var(--boundary);background:var(--surface);height:40px;border-radius:2px;max-width:220px}.select-control label{font-size:10px;color:var(--muted);margin-left:10px;white-space:nowrap}.select-control select{appearance:auto;font-size:11px;color:var(--ink);border:0;background:transparent;padding:8px 7px;min-height:36px;max-width:150px}.reset-button{margin-left:auto}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border-top:2px solid var(--ink);border-bottom:1px solid var(--line);margin-bottom:27px}.metric{padding:18px 22px 17px;position:relative}.metric+.metric:before{content:"";position:absolute;left:0;top:20px;bottom:20px;width:1px;background:var(--line)}.metric-label{display:flex;gap:7px;align-items:center;color:var(--muted);font-size:11px}.metric-label svg{width:13px;height:13px}.status-symbol{display:inline-block;font-size:13px;line-height:1;color:var(--ink)}.metric-value{font-size:32px;font-weight:650;letter-spacing:-1.3px;line-height:1.25;margin:10px 0 5px;font-variant-numeric:tabular-nums}.metric-note{font-size:10px;color:var(--muted);line-height:1.5}
+.workspace-grid{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:22px;align-items:start}.work-surface{min-width:0;display:flex;flex-direction:column;gap:22px}.panel{background:var(--surface);border:1px solid var(--line);min-width:0}.section-header{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:19px 20px 18px}.section-header>div{display:flex;align-items:center;gap:9px;min-width:0}.section-number{font-size:9px;letter-spacing:.04em;color:var(--muted);padding-right:2px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.section-header h2{font-size:14px;letter-spacing:-.2px;font-weight:650;margin:0}.count-tag{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--soft);color:var(--ink);font-size:10px;padding:0 6px;line-height:20px;min-width:21px;text-align:center}.section-caption{font-size:9px;color:var(--muted);text-align:right}.agent-table-head{display:grid;grid-template-columns:minmax(170px,1fr) 104px 44px 68px 12px;gap:10px;font-size:8px;letter-spacing:.06em;color:var(--muted);padding:10px 20px;background:var(--page);border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:600}.agent-table-head span:nth-child(3),.agent-table-head span:nth-child(4){text-align:right}.session-group+.session-group{border-top:1px solid var(--line)}.session-header{display:flex;align-items:center;gap:7px;min-height:36px;padding:9px 20px 7px;font-size:9px;color:var(--muted)}.session-header svg{width:12px;height:12px}.session-project{font-weight:650;color:var(--ink)}.session-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.session-meta{margin-left:auto;white-space:nowrap}.agent-row{display:grid;grid-template-columns:minmax(170px,1fr) 104px 44px 68px 12px;gap:10px;align-items:center;width:100%;padding:13px 20px;text-align:left;border:0;border-left:3px solid transparent;background:transparent;color:var(--ink);position:relative;min-height:72px}.agent-row+.agent-row{border-top:1px solid var(--line)}.agent-row:hover{background:var(--soft)}.agent-row.selected{background:var(--selected);border-left-color:var(--ink)}.agent-row:focus-visible{outline-offset:-3px}.agent-identity{display:flex;align-items:flex-start;gap:9px;min-width:0;padding-left:var(--depth,0)}.agent-identity.is-child{position:relative}.agent-identity.is-child:before{content:"";width:8px;height:12px;position:absolute;left:calc(var(--depth) - 10px);top:5px;border-left:1px solid var(--boundary);border-bottom:1px solid var(--boundary)}.agent-avatar{width:27px;height:27px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:9px;font-weight:700;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;margin-top:1px}.agent-avatar.coordinator{background:var(--ink);color:var(--inverse);border-color:var(--ink)}.agent-copy{min-width:0}.agent-name{font-weight:650;font-size:11px;display:block;line-height:1.6;overflow-wrap:anywhere}.agent-task{font-size:10px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1.7}.agent-model{font-size:8px;display:block;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.03em}.status{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:550;white-space:nowrap}.status-marker{font-size:11px;line-height:1}.status-running .status-marker{font-size:8px}.status-error{font-weight:700}.status-completed,.status-idle{color:var(--muted)}.tool-count,.elapsed{font-variant-numeric:tabular-nums;text-align:right;font-size:11px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.elapsed{font-size:10px;color:var(--muted)}.row-chevron{font-size:14px;color:var(--muted)}.panel-footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:8px;line-height:1.6;padding:10px 20px}.text-mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:8px;letter-spacing:.03em}.empty-state{text-align:center;padding:45px 24px 48px}.empty-state svg{width:26px;height:26px;margin:0 auto 14px;color:var(--muted)}.empty-state h3{font-size:14px;margin:0 0 7px;font-weight:600}.empty-state p{font-size:11px;color:var(--muted);max-width:390px;margin:0 auto;line-height:1.8}.empty-state code{font-size:10px;background:var(--soft);padding:3px 5px;display:inline-block;margin-top:9px}.empty-state .text-button{margin-top:10px}
+.timeline-legend{display:flex;gap:16px;padding:0 20px 12px;color:var(--muted);font-size:8px;flex-wrap:wrap}.timeline-legend>span{display:inline-flex;gap:5px;align-items:center}.legend-mark{display:inline-block;width:13px;height:5px;background:var(--ink)}.legend-mark.muted{background:var(--boundary)}.legend-mark.patterned{height:6px;border:1px solid var(--ink);background:repeating-linear-gradient(45deg,var(--ink) 0,var(--ink) 1px,transparent 1px,transparent 3px)}.timeline{padding:0 20px 17px}.timeline-axis{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;margin-bottom:10px}.timeline-axis-label{font-size:8px;color:var(--muted)}.timeline-ticks{position:relative;height:15px;font-size:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}.timeline-ticks>span{position:absolute;transform:translateX(-50%)}.timeline-ticks>span:first-child{transform:none}.timeline-ticks>span:last-child{transform:translateX(-100%)}.timeline-row{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:center;width:100%;background:transparent;color:var(--ink);padding:5px 0;border:0;text-align:left;min-height:34px}.timeline-row:hover,.timeline-row.selected{background:var(--soft)}.timeline-row.selected .timeline-name{font-weight:700}.timeline-name{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.timeline-track{position:relative;height:22px;min-width:0;background:repeating-linear-gradient(to right,var(--line) 0,var(--line) 1px,transparent 1px,transparent 25%)}.timeline-track:after{content:"";position:absolute;right:0;height:100%;width:1px;background:var(--line)}.lifetime{position:absolute;top:10px;height:2px;background:var(--line);min-width:2px}.tool-segment{position:absolute;top:5px;height:12px;min-width:3px;background:var(--boundary);border:1px solid var(--surface);z-index:1}.tool-segment.is-running{background:var(--ink)}.tool-segment.is-error{border:1px solid var(--ink);background:repeating-linear-gradient(45deg,var(--ink) 0,var(--ink) 1px,var(--surface) 1px,var(--surface) 4px)}.timeline-row .lifetime.running{background:var(--ink);height:3px}.timeline-row .lifetime.waiting{height:4px;background:transparent;border-top:1px dashed var(--ink)}.timeline-empty{font-size:10px;color:var(--muted);padding:12px 0}
+.activity-entry{padding:13px 20px;display:grid;grid-template-columns:12px 1fr auto;gap:11px;align-items:start}.activity-entry+.activity-entry{border-top:1px solid var(--line)}.event-mark{width:6px;height:6px;margin-top:6px;background:var(--boundary)}.event-mark.error{background:var(--ink);transform:rotate(45deg)}.activity-title{font-size:11px;font-weight:550;line-height:1.7}.activity-detail{font-size:10px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.activity-agent{display:inline-block;font-size:9px;color:var(--muted);padding:0;background:none;border:0;text-decoration:underline;text-underline-offset:2px;margin-top:5px;text-align:left}.activity-time{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:8px;color:var(--muted);white-space:nowrap;margin-top:4px}
+.inspector{background:var(--surface);border:1px solid var(--line);position:sticky;top:22px;min-width:0}.inspector-empty{padding:35px 25px;min-height:300px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.inspector-empty svg{width:28px;height:28px;color:var(--muted);margin-bottom:18px}.inspector-empty h2{font-size:15px;margin:0 0 8px}.inspector-empty p{font-size:12px;color:var(--muted);line-height:1.8;margin:0}.inspector-header{background:var(--ink);color:var(--inverse);padding:21px}.inspector-kicker{display:flex;justify-content:space-between;align-items:center;font-size:8px;letter-spacing:.1em;opacity:.75;margin-bottom:17px}.inspector-kicker svg{width:13px;height:13px}.inspector-title-row{display:flex;align-items:center;gap:10px}.inspector-avatar{border:1px solid currentColor;display:flex;align-items:center;justify-content:center;width:35px;height:35px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;flex:none}.inspector-title{font-size:17px;line-height:1.4;font-weight:600;letter-spacing:-.4px;margin:0;overflow-wrap:anywhere}.inspector-header .status{color:inherit;margin-top:6px;font-size:10px}.inspector-task{font-size:11px;line-height:1.8;opacity:.82;margin:15px 0 0;overflow-wrap:anywhere}.inspector-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line)}.detail-label{display:block;font-size:8px;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}.detail-value{font-size:11px;font-weight:550;overflow-wrap:anywhere}.detail-value.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px}.inspector-tabs{display:flex;padding:0 17px;border-bottom:1px solid var(--line);gap:13px}.inspector-tab{font-size:10px;background:none;color:var(--muted);border:0;border-bottom:2px solid transparent;min-height:40px;padding:10px 2px 8px}.inspector-tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink);font-weight:650}.inspector-body{padding:18px 20px;max-height:520px;overflow:auto}.inspector-section+.inspector-section{margin-top:23px;padding-top:19px;border-top:1px solid var(--line)}.inspector-section h3{font-size:9px;letter-spacing:.07em;margin:0 0 12px;color:var(--muted);font-weight:600}.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 16px}.token-item span{display:block;font-size:9px;color:var(--muted)}.token-item strong{display:block;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:15px;font-weight:500;margin-top:4px}.detail-note{font-size:9px;color:var(--muted);line-height:1.8;margin:12px 0 0}.detail-list{display:flex;flex-direction:column;gap:11px}.detail-event{display:flex;gap:8px}.detail-event-dot{width:5px;height:5px;border:1px solid var(--ink);margin-top:6px;flex:none}.detail-event-name{font-size:10px;line-height:1.7;font-weight:550}.detail-event-copy{font-size:9px;color:var(--muted);overflow-wrap:anywhere;line-height:1.6;margin-top:3px}.detail-time{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:8px;color:var(--muted);margin-top:4px}.tool-detail{border-bottom:1px solid var(--line);padding:11px 0}.tool-detail:first-child{padding-top:0}.tool-detail:last-child{border-bottom:0}.tool-detail-top{display:flex;justify-content:space-between;gap:10px;font-size:11px;font-weight:600}.tool-detail-summary{font-size:10px;color:var(--muted);line-height:1.8;margin-top:5px;overflow-wrap:anywhere}.tool-detail-time{font-size:9px;color:var(--muted);margin-top:6px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.file-row{display:flex;gap:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px;color:var(--ink);line-height:1.7;padding:10px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.file-row svg{width:13px;height:13px;margin-top:2px;color:var(--muted);flex:none}.file-row:last-child{border-bottom:0}.task-item{display:flex;align-items:flex-start;gap:8px;font-size:10px;line-height:1.8}.task-marker{font-size:11px;flex:none}.inspector-footer{padding:12px 20px;border-top:1px solid var(--line);font-size:8px;color:var(--muted);line-height:1.8;overflow-wrap:anywhere}.detail-empty{padding:8px 0;color:var(--muted);font-size:11px;line-height:1.8}.page-footer{display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;margin-top:23px;padding-top:16px;border-top:1px solid var(--line);font-size:8px;color:var(--muted);line-height:1.7}
+body[data-view=overview] .activity-panel{display:none}body[data-view=timeline] .agent-panel,body[data-view=timeline] .activity-panel{display:none}body[data-view=timeline] .timeline-row{min-height:49px}body[data-view=timeline] .timeline-track{height:31px}body[data-view=timeline] .tool-segment{top:8px;height:16px}body[data-view=timeline] .lifetime{top:15px}body[data-view=activity] .agent-panel,body[data-view=activity] .timeline-panel{display:none}
+/* Keep working information readable; the smallest labels are only navigational metadata. */
+.subtitle{font-size:13px}.button{font-size:12px}.search-control input{font-size:13px}.select-control select{font-size:12px}.metric-label{font-size:12px}.metric-note{font-size:11px}.section-caption{font-size:10px}.agent-table-head{font-size:9px}.agent-name{font-size:13px}.agent-task{font-size:12px}.agent-model{font-size:9px}.status{font-size:11px}.tool-count{font-size:12px}.elapsed{font-size:11px}.session-header{font-size:10px}.panel-footer{font-size:10px}.timeline-name{font-size:11px}.timeline-legend{font-size:10px}.timeline-ticks,.timeline-axis-label{font-size:9px}.detail-label{font-size:10px}.detail-value{font-size:12px}.detail-value.mono{font-size:11px}.inspector-task{font-size:12px}.inspector-tab{font-size:12px}.inspector-section h3{font-size:10px}.token-item span{font-size:11px}.detail-note{font-size:11px}.detail-event-name{font-size:12px}.detail-event-copy{font-size:11px}.detail-time{font-size:10px}.tool-detail-summary{font-size:12px}.tool-detail-time{font-size:10px}.file-row{font-size:11px}.task-item{font-size:12px}.inspector-footer{font-size:10px}.activity-title{font-size:13px}.activity-detail{font-size:12px}.activity-agent{font-size:11px}.activity-time{font-size:10px}.page-footer{font-size:10px}
+@media(min-width:1600px){.main{padding:40px 45px 25px}.workspace-grid{grid-template-columns:minmax(0,1fr) 355px;gap:28px}.agent-row,.agent-table-head{grid-template-columns:minmax(200px,1fr) 120px 60px 80px 12px}.agent-name{font-size:13px}.agent-task{font-size:11px}.status{font-size:10px}.section-header h2{font-size:16px}.timeline-row{min-height:38px}.timeline-name{font-size:10px}.inspector-body{max-height:620px}}
+@media(max-width:1240px){.sidebar{width:180px;padding:27px 12px 20px}.brand{gap:8px;padding:0 5px}.brand-text{font-size:10px}.brand-mark{transform:scale(.85);transform-origin:left top;width:29px}.brand-version{font-size:7px}.nav-item{font-size:11px}.nav-index{display:none}.main{margin-left:180px;padding:28px 22px 18px}.workspace-grid{grid-template-columns:minmax(0,1fr) 280px;gap:16px}.section-header{padding:16px}.section-caption{max-width:110px}.agent-row,.agent-table-head{padding-left:13px;padding-right:13px;grid-template-columns:minmax(145px,1fr) 80px 32px 54px 8px;gap:7px}.agent-row{min-height:75px}.agent-avatar{width:22px;height:22px;font-size:8px}.agent-identity{gap:7px}.agent-name{font-size:10px}.agent-task{font-size:9px}.status{font-size:8px}.metric{padding:16px}.header-buttons{gap:5px}.button{font-size:10px;padding:7px 8px}.page-header{gap:12px}.header-actions{gap:12px}.timeline{padding:0 14px 14px}.timeline-row,.timeline-axis{grid-template-columns:95px minmax(0,1fr);gap:7px}.timeline-name{font-size:8px}.panel-footer{padding:10px 14px}.inspector-header{padding:18px}.inspector-meta,.inspector-body{padding:16px}.inspector-title{font-size:15px}}
+@media(max-width:1090px){.sidebar{width:72px;align-items:center;padding:25px 8px}.brand{padding:0}.brand-mark{transform:none;width:32px}.brand-text,.nav-label,.sidebar-scope,.sidebar-bottom{display:none}.navigation{margin-top:36px;width:100%}.nav-item{justify-content:center;padding:12px;min-height:46px}.nav-item>span:not(:first-child){display:none}.nav-item svg{width:18px;height:18px}.main{margin-left:72px}.workspace-grid{grid-template-columns:minmax(0,1fr) 280px}.agent-row,.agent-table-head{grid-template-columns:minmax(140px,1fr) 80px 32px 54px 8px}.filters{gap:8px}.select-control label{display:none}.select-control select{max-width:145px}.subtitle{font-size:11px}.header-buttons #pause-label{font-size:0}.header-buttons #pause-label:after{content:"Tạm dừng";font-size:10px}}
+@media(max-width:890px){.workspace-grid{grid-template-columns:minmax(0,1fr)}.inspector{position:static}.inspector-meta{grid-template-columns:repeat(4,minmax(0,1fr))}.inspector-body{max-height:none}.inspector-title-row{gap:12px}.inspector-header{padding:20px}.inspector-task{max-width:650px}.inspector-tabs{padding-left:20px}.token-grid{grid-template-columns:repeat(4,1fr)}.inspector-empty{min-height:180px}.agent-row,.agent-table-head{grid-template-columns:minmax(180px,1fr) 110px 50px 80px 12px;gap:10px;padding-left:20px;padding-right:20px}.agent-name{font-size:12px}.agent-task{font-size:11px}.agent-avatar{width:28px;height:28px;font-size:9px}.status{font-size:10px}.timeline-row,.timeline-axis{grid-template-columns:130px minmax(0,1fr);gap:12px}.timeline-name{font-size:10px}.section-caption{max-width:none}.timeline{padding:0 20px 17px}.page-header{flex-wrap:wrap}.header-actions{flex-direction:row;align-items:center;justify-content:space-between;width:100%}.metric-value{font-size:30px}.metric-note{font-size:9px}}
+@media(max-width:600px){.sidebar{position:sticky;top:0;width:100%;height:auto;inset:auto;flex-direction:row;justify-content:space-between;padding:11px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand-mark{width:24px;height:26px;grid-template-columns:repeat(3,6px);gap:3px}.brand-mark span{height:17px}.brand-mark span:nth-child(2){height:25px}.brand-mark span:nth-child(3){height:11px}.brand-text{display:block;font-size:8px;line-height:1.35}.brand-version{display:none}.brand{gap:8px;align-items:center}.navigation{width:auto;margin:0;flex-direction:row;gap:3px}.nav-item{padding:10px;min-height:39px;width:39px}.nav-item svg{width:17px;height:17px}.main{margin-left:0;padding:25px 16px 18px}.page-header{margin-bottom:23px;gap:18px}.eyebrow{font-size:8px;margin-bottom:10px}h1{font-size:25px;letter-spacing:-.8px}.subtitle{font-size:11px;line-height:1.8}.header-actions{gap:8px;align-items:center}.freshness{font-size:9px}.button{min-height:36px;padding:7px 9px}.button.primary{font-size:0}.button.primary:after{content:"Làm mới";font-size:10px}.header-buttons #pause-label{display:none}.icon-button{min-width:35px}.header-buttons{gap:5px}.notice{font-size:10px;align-items:flex-start;gap:8px;padding:11px}.notice a{font-size:9px;align-self:center}.notice svg{width:14px;height:14px;margin-top:2px}.demo-notice>div{flex:1}.demo-notice>div span{display:block;margin-top:3px}.filters{margin-bottom:20px;gap:8px}.search-control{flex-basis:100%;height:42px}.select-control{flex:1;min-width:0;max-width:100%;height:38px}.select-control select{width:100%;max-width:100%;font-size:10px;padding:6px 4px}.reset-button{font-size:10px;margin-right:4px;padding:0;min-height:28px}.metrics{grid-template-columns:repeat(2,1fr);margin-bottom:22px}.metric{padding:15px 16px}.metric:nth-child(3),.metric:nth-child(4){border-top:1px solid var(--line)}.metric:nth-child(3):before{display:none}.metric+.metric:before{top:16px;bottom:16px}.metric-label{font-size:10px}.metric-value{font-size:31px;margin:7px 0 4px}.metric-note{font-size:9px}.work-surface{gap:18px}.section-header{padding:16px 14px;align-items:flex-start}.section-header h2{font-size:14px}.section-caption{font-size:8px;max-width:100px}.section-header>div{gap:7px}.agent-table-head{grid-template-columns:minmax(0,1fr) 86px 35px;gap:7px;padding:9px 13px}.agent-table-head>span:nth-child(4),.agent-table-head>span:nth-child(5){display:none}.agent-row{grid-template-columns:minmax(0,1fr) 86px 35px;gap:7px;padding:13px 12px;min-height:82px}.agent-row>.elapsed,.agent-row>.row-chevron{display:none}.agent-identity{gap:8px;padding-left:min(var(--depth,0),16px)}.agent-identity.is-child:before{left:6px}.agent-name{font-size:11px}.agent-task{font-size:10px}.agent-model{font-size:8px}.agent-avatar{width:23px;height:23px;font-size:8px}.status{font-size:9px}.tool-count{font-size:10px}.session-header{padding:10px 14px 7px;font-size:8px;flex-wrap:wrap;gap:5px}.session-id{max-width:85px}.session-meta{font-size:8px}.panel-footer{padding:10px 14px;font-size:8px;flex-wrap:wrap;gap:4px}.panel-footer .text-mono{font-size:7px}.timeline-legend{padding:0 14px 13px;font-size:7px;gap:12px}.timeline{padding:0 14px 16px}.timeline-row,.timeline-axis{grid-template-columns:85px minmax(0,1fr);gap:8px}.timeline-name{font-size:8px}.timeline-ticks,.timeline-axis-label{font-size:7px}.timeline-row{min-height:34px}.inspector-meta{grid-template-columns:1fr 1fr}.token-grid{grid-template-columns:1fr 1fr}.activity-entry{padding:12px 14px;gap:8px;grid-template-columns:8px 1fr auto}.activity-title{font-size:10px}.activity-detail{font-size:9px}.activity-time{font-size:7px}.page-footer{font-size:8px;gap:7px;margin-top:20px}.page-footer>span:last-child{flex-basis:100%}.empty-state{padding:32px 20px}.empty-state p{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media(forced-colors:active){.agent-row.selected{border-left-color:Highlight}.nav-item.active,.button.primary{border:1px solid ButtonText}.tool-segment,.legend-mark{forced-color-adjust:none}.status-marker{color:CanvasText}}
+.legend-mark.life{height:2px;background:var(--line)}
+.session-usage-project{font-size:11px;line-height:1.8;margin:0 0 13px;font-weight:600;overflow-wrap:anywhere}.session-usage-stats{display:grid;grid-template-columns:1fr 1fr;gap:13px}.usage-meter{height:4px;background:var(--track);margin:13px 0 0}.usage-meter>span{display:block;height:100%;background:var(--ink)}.quota-list{margin-top:13px;border-top:1px solid var(--line)}.quota-item{padding:10px 0;border-bottom:1px solid var(--line)}.quota-heading{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:11px}.quota-heading strong{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;font-weight:500}.retained-history-note{margin-top:0;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+@media(max-width:1240px){.agent-name{font-size:12px}.agent-task{font-size:11px}.agent-model{font-size:9px}.status{font-size:10px}.timeline-name{font-size:10px}.detail-note{font-size:11px}.section-caption{font-size:10px}.button{font-size:11px}.subtitle{font-size:12px}.metric-note{font-size:10px}}
+@media(max-width:1090px){#pause-button[aria-pressed=true] #pause-label:after{content:"Tiếp tục"}}
+@media(max-width:600px){.agent-name{font-size:12px}.agent-task{font-size:11px}.status{font-size:10px}.timeline-name{font-size:9px}.timeline-legend{font-size:9px}.metric-note{font-size:10px}.section-caption{font-size:9px}.activity-title{font-size:12px}.activity-detail{font-size:11px}.activity-time{font-size:9px}.panel-footer{font-size:9px}.page-footer{font-size:9px}.inspector-footer{font-size:10px}.select-control select{font-size:11px}.metric-label{font-size:11px}.subtitle{font-size:12px}}
+
+.office-launch{text-decoration:none;border-top:1px solid var(--line);margin-top:8px}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <aside class="sidebar" aria-label="Điều hướng chính">
+    <a class="brand" href="#overview" aria-label="Agent Observatory — Tổng quan">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="brand-text">AGENT<br>OBSERVATORY<span class="brand-version">CLAUDE CODE MOD / 02</span></span>
+    </a>
+    <div class="nav-label">KHÔNG GIAN LÀM VIỆC</div>
+    <nav class="navigation">
+      <button class="nav-item active" data-view="overview" aria-current="page"><span data-icon="overview"></span><span>Tổng quan</span><span class="nav-index">01</span></button>
+      <button class="nav-item" data-view="timeline"><span data-icon="timeline"></span><span>Dòng thời gian</span><span class="nav-index">02</span></button>
+      <button class="nav-item" data-view="activity"><span data-icon="activity"></span><span>Hoạt động</span><span class="nav-index">03</span></button>
+      <a class="nav-item office-launch" id="office-window-link" href="/office" target="agent-observatory-office" rel="noopener" aria-label="Mở văn phòng ảo trong cửa sổ riêng" title="Văn phòng ảo · cửa sổ riêng"><span data-icon="layers"></span><span>Văn phòng ảo</span><span class="nav-index" aria-hidden="true">↗</span></a>
+    </nav>
+    <section class="sidebar-scope" aria-label="Nguồn dữ liệu">
+      <span class="tiny-label">NGUỒN THEO DÕI</span>
+      <div class="source-name"><span class="source-dot"></span>Claude Code</div>
+      <p>Dữ liệu trên máy của bạn.<br>Quan sát, không điều khiển agent.</p>
+    </section>
+    <div class="sidebar-bottom">
+      <div class="sidebar-line"></div>
+      <span class="tiny-label">NHÌN RÕ CÔNG VIỆC.</span>
+      <p>Biết ai đang làm gì,<br>và việc nào cần bạn.</p>
+      <span class="local-tag"><span data-icon="lock"></span>LOCAL OBSERVABILITY</span>
+    </div>
+  </aside>
+
+  <main id="main" class="main" tabindex="-1">
+    <header class="page-header">
+      <div>
+        <div class="eyebrow">WORKSPACE <span>/</span> AGENT OPERATIONS</div>
+        <h1 id="page-title">Tổng quan agents<span class="title-dot">.</span></h1>
+        <p class="subtitle" id="page-subtitle">Mỗi agent, mỗi bước làm việc. Trong cùng một góc nhìn.</p>
+      </div>
+      <div class="header-actions">
+        <div class="freshness" id="connection-status"><span class="connection-dot"></span><span id="connection-label">Đang kết nối</span></div>
+        <div class="header-buttons">
+          <button class="button icon-button" id="theme-button" type="button" aria-label="Chuyển sang giao diện tối" title="Chuyển giao diện"><span data-icon="moon"></span></button>
+          <button class="button" id="pause-button" type="button" aria-label="Tạm dừng cập nhật màn hình" aria-pressed="false" title="Chỉ tạm dừng cập nhật màn hình; agents vẫn tiếp tục làm việc"><span data-icon="pause"></span><span id="pause-label">Tạm dừng cập nhật</span></button>
+          <button class="button primary" id="refresh-button" type="button" aria-label="Làm mới dữ liệu"><span data-icon="refresh"></span>Làm mới</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="notice demo-notice" id="demo-notice" hidden><span data-icon="info"></span><div><strong>Dữ liệu mẫu</strong><span> · Mô phỏng để khám phá giao diện. Không phải hoạt động agent thật.</span></div><a href="./" id="live-link">Mở dữ liệu thật <span aria-hidden="true">↗</span></a></div>
+    <div class="notice connection-notice" id="connection-notice" hidden><span data-icon="warning"></span><p id="connection-message"></p><button type="button" class="text-button" id="retry-button">Thử lại</button></div>
+    <div class="notice paused-notice" id="paused-notice" hidden><span data-icon="pause"></span><span>Màn hình đang giữ nguyên dữ liệu. Các agent vẫn tiếp tục làm việc.</span></div>
+
+    <section class="filters" aria-label="Bộ lọc toàn dashboard">
+      <div class="search-control"><span data-icon="search"></span><label class="sr-only" for="search-input">Tìm agent hoặc công việc</label><input type="search" id="search-input" placeholder="Tìm agent, công việc, model…" autocomplete="off"><kbd aria-hidden="true">/</kbd></div>
+      <div class="select-control"><label for="project-filter">Dự án</label><select id="project-filter" aria-label="Lọc theo dự án"><option value="">Tất cả dự án</option></select></div>
+      <div class="select-control"><label for="session-filter">Phiên</label><select id="session-filter" aria-label="Lọc theo phiên"><option value="">Tất cả phiên</option></select></div>
+      <div class="select-control"><label for="status-filter">Trạng thái</label><select id="status-filter" aria-label="Lọc theo trạng thái"><option value="">Tất cả trạng thái</option><option value="running">Đang làm</option><option value="waiting">Chờ bạn</option><option value="error">Có lỗi</option><option value="idle">Tạm nghỉ</option><option value="completed">Đã kết thúc</option><option value="unknown">Chưa rõ</option></select></div>
+      <button type="button" class="text-button reset-button" id="reset-filters" hidden>Xóa bộ lọc <span aria-hidden="true">×</span></button>
+    </section>
+
+    <section class="metrics" aria-label="Tổng hợp theo bộ lọc">
+      <div class="metric"><div class="metric-label"><span class="status-symbol running" aria-hidden="true">●</span>Đang làm việc</div><div class="metric-value" id="metric-running">—</div><div class="metric-note" id="metric-running-note">Chưa nhận dữ liệu</div></div>
+      <div class="metric"><div class="metric-label"><span class="status-symbol waiting" aria-hidden="true">◐</span>Cần chú ý</div><div class="metric-value" id="metric-attention">—</div><div class="metric-note" id="metric-attention-note">Chờ phản hồi hoặc có lỗi</div></div>
+      <div class="metric"><div class="metric-label"><span data-icon="tool"></span>Tool calls</div><div class="metric-value" id="metric-tools">—</div><div class="metric-note">Đã ghi nhận trong bộ lọc</div></div>
+      <div class="metric"><div class="metric-label"><span data-icon="layers"></span>Phiên làm việc</div><div class="metric-value" id="metric-sessions">—</div><div class="metric-note" id="metric-sessions-note">Tất cả dự án</div></div>
+    </section>
+
+    <div class="workspace-grid">
+      <div class="work-surface">
+        <section class="panel agent-panel" id="agents-section" aria-labelledby="agents-title">
+          <header class="section-header"><div><span class="section-number">01</span><h2 id="agents-title">Đội ngũ agents</h2><span class="count-tag" id="agent-count">—</span></div><span class="section-caption">Nhấn vào agent để xem chi tiết</span></header>
+          <div class="agent-table-head" aria-hidden="true"><span>AGENT / CÔNG VIỆC</span><span>TRẠNG THÁI</span><span>TOOLS</span><span>THỜI GIAN</span><span></span></div>
+          <div id="agent-list" class="agent-list" aria-label="Danh sách agents"></div>
+          <div class="panel-footer"><span id="filter-summary">Đang lấy dữ liệu…</span><span class="text-mono">PARENT → CHILD</span></div>
+        </section>
+
+        <section class="panel timeline-panel" id="timeline-section" aria-labelledby="timeline-title">
+          <header class="section-header"><div><span class="section-number">02</span><h2 id="timeline-title">Nhịp làm việc</h2></div><span class="section-caption" id="timeline-range">Thời gian từ dữ liệu</span></header>
+          <div class="timeline-legend"><span><i class="legend-mark solid"></i>Tool đang chạy</span><span><i class="legend-mark muted"></i>Tool đã chạy</span><span><i class="legend-mark patterned"></i>Có lỗi</span><span><i class="legend-mark life"></i>Vòng đời agent</span></div>
+          <div id="timeline" class="timeline" aria-label="Dòng thời gian của agents"></div>
+          <div class="panel-footer"><span>Cùng thang thời gian cho mọi agent</span><span id="timeline-history-note">Khoảng trống = không có tool ghi nhận</span></div>
+        </section>
+
+        <section class="panel activity-panel" id="activity-section" aria-labelledby="activity-title">
+          <header class="section-header"><div><span class="section-number">03</span><h2 id="activity-title">Luồng hoạt động</h2><span class="count-tag" id="event-count">—</span></div><span class="section-caption">Mới nhất trước</span></header>
+          <div id="activity-list" class="activity-list"></div>
+          <div class="panel-footer"><span id="activity-limit">Tối đa 80 sự kiện gần nhất trong bộ lọc</span><span>Quan sát trực tiếp</span></div>
+        </section>
+      </div>
+
+      <aside class="inspector" id="inspector" aria-label="Chi tiết agent">
+        <div class="inspector-empty" id="inspector-empty"><span data-icon="cursor"></span><h2>Đi sâu vào một agent</h2><p>Chọn một agent để xem công việc, tool calls, các tệp và sự kiện liên quan.</p></div>
+        <div id="inspector-content" hidden></div>
+      </aside>
+    </div>
+
+    <footer class="page-footer"><span id="updated-at">Chưa có bản cập nhật</span><span id="timezone-label"></span><span>Không thu thập prompt hoặc nội dung tool đầy đủ.</span></footer>
+    <div class="sr-only" role="status" aria-live="polite" id="announcement"></div>
+  </main>
+<script>window.__AGENT_OBSERVATORY_SNAPSHOT__={"schemaVersion":1,"generatedAt":"2026-11-23T13:32:55.736Z","source":{"mode":"demo","connected":true,"latestEventAt":"2026-11-23T13:32:49.736Z","staleAfterMs":90000,"warnings":["Dữ liệu minh họa được tạo sẵn; không phải các agent đang chạy trên máy của bạn."]},"sessions":[{"id":"demo-web-session","project":"sample-app","cwd":"~/projects/sample-app","status":"waiting","startedAt":"2026-11-23T13:17:15.736Z","lastEventAt":"2026-11-23T13:32:49.736Z","endedAt":null,"model":"claude-sonnet-4-5","contextPercent":42,"rateLimits":[{"kind":"five_hour","percentUsed":34,"resetsAt":"2026-11-23T15:42:55.736Z"}],"costUsd":0.48,"costEstimated":true,"costIncomplete":false,"tokens":{"input":30700,"output":10300,"cacheRead":126800,"cacheWrite":10500},"agents":[{"id":"main","parentId":null,"name":"Điều phối phát triển","type":"main","task":"Hoàn thiện dashboard và kiểm tra dữ liệu API","status":"running","startedAt":"2026-11-23T13:17:15.736Z","lastEventAt":"2026-11-23T13:32:49.736Z","endedAt":null,"model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":5300,"output":1400,"cacheRead":22400,"cacheWrite":2100},"toolCalls":2,"errors":0,"files":["README.md"],"tools":[{"id":"demo-tool-5","name":"Glob","status":"success","startedAt":"2026-11-23T13:17:55.736Z","endedAt":"2026-11-23T13:17:58.736Z","durationMs":3000,"summary":"src/components/dashboard/**"},{"id":"demo-tool-3","name":"Read","status":"success","startedAt":"2026-11-23T13:17:30.736Z","endedAt":"2026-11-23T13:17:32.736Z","durationMs":2000,"summary":"README.md · yêu cầu và cách chạy dự án"}],"events":[{"id":"demo-event-51","type":"task.update","timestamp":"2026-11-23T13:32:49.736Z","agentId":"main","title":"Task updated","detail":"Tổng hợp kết quả xác minh","status":null},{"id":"demo-event-46","type":"usage","timestamp":"2026-11-23T13:32:46.736Z","agentId":"main","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-50","type":"task.update","timestamp":"2026-11-23T13:28:00.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra thao tác và bàn phím","status":null},{"id":"demo-event-49","type":"task.update","timestamp":"2026-11-23T13:19:20.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra kết nối API trên staging","status":null},{"id":"demo-event-48","type":"task.update","timestamp":"2026-11-23T13:18:15.736Z","agentId":"main","title":"Task updated","detail":"Cải thiện giao diện dashboard","status":null},{"id":"demo-event-6","type":"tool.end","timestamp":"2026-11-23T13:17:58.736Z","agentId":"main","title":"Glob completed","detail":"src/components/dashboard/**","status":"success"},{"id":"demo-event-5","type":"tool.start","timestamp":"2026-11-23T13:17:55.736Z","agentId":"main","title":"Glob started","detail":"src/components/dashboard/**","status":null},{"id":"demo-event-4","type":"tool.end","timestamp":"2026-11-23T13:17:32.736Z","agentId":"main","title":"Read completed","detail":"README.md · yêu cầu và cách chạy dự án","status":"success"},{"id":"demo-event-3","type":"tool.start","timestamp":"2026-11-23T13:17:30.736Z","agentId":"main","title":"Read started","detail":"README.md · yêu cầu và cách chạy dự án","status":null},{"id":"demo-event-2","type":"turn.start","timestamp":"2026-11-23T13:17:25.736Z","agentId":"main","title":"Turn started","detail":"Hoàn thiện dashboard và kiểm tra dữ liệu API","status":null},{"id":"demo-event-1","type":"session.start","timestamp":"2026-11-23T13:17:15.736Z","agentId":"main","title":"Session started","detail":null,"status":null}],"modelActivity":null},{"id":"ui-agent","parentId":"main","name":"Frontend UI","type":"frontend","task":"Tinh chỉnh bộ lọc và trạng thái tải của dashboard","status":"running","startedAt":"2026-11-23T13:18:30.736Z","lastEventAt":"2026-11-23T13:32:43.736Z","endedAt":null,"model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":12900,"output":4300,"cacheRead":52100,"cacheWrite":4200},"toolCalls":8,"errors":0,"files":["src/components/dashboard/Filters.tsx","src/components/dashboard/Dashboard.tsx","src/styles/dashboard.css"],"tools":[{"id":"demo-tool-44","name":"Bash","status":"running","startedAt":"2026-11-23T13:32:25.736Z","endedAt":null,"durationMs":null,"summary":"Build · xác minh giao diện dashboard"},{"id":"demo-tool-42","name":"Edit","status":"success","startedAt":"2026-11-23T13:31:45.736Z","endedAt":"2026-11-23T13:31:49.736Z","durationMs":4000,"summary":"Bổ sung trạng thái focus cho điều khiển"},{"id":"demo-tool-40","name":"Read","status":"success","startedAt":"2026-11-23T13:31:10.736Z","endedAt":"2026-11-23T13:31:12.736Z","durationMs":2000,"summary":"src/components/dashboard/Filters.tsx"},{"id":"demo-tool-17","name":"Bash","status":"success","startedAt":"2026-11-23T13:22:15.736Z","endedAt":"2026-11-23T13:22:33.736Z","durationMs":18000,"summary":"TypeScript · kiểm tra kiểu dữ liệu"},{"id":"demo-tool-15","name":"Edit","status":"success","startedAt":"2026-11-23T13:21:15.736Z","endedAt":"2026-11-23T13:21:18.736Z","durationMs":3000,"summary":"Căn chỉnh bộ lọc trên màn hình nhỏ"},{"id":"demo-tool-13","name":"Edit","status":"success","startedAt":"2026-11-23T13:19:55.736Z","endedAt":"2026-11-23T13:19:59.736Z","durationMs":4000,"summary":"Thêm trạng thái tải và điều khiển bằng bàn phím"},{"id":"demo-tool-11","name":"Read","status":"success","startedAt":"2026-11-23T13:19:15.736Z","endedAt":"2026-11-23T13:19:17.736Z","durationMs":2000,"summary":"src/components/dashboard/Dashboard.tsx"},{"id":"demo-tool-9","name":"Read","status":"success","startedAt":"2026-11-23T13:18:45.736Z","endedAt":"2026-11-23T13:18:46.736Z","durationMs":1000,"summary":"src/components/dashboard/Filters.tsx"}],"events":[{"id":"demo-event-45","type":"usage","timestamp":"2026-11-23T13:32:43.736Z","agentId":"ui-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-44","type":"tool.start","timestamp":"2026-11-23T13:32:25.736Z","agentId":"ui-agent","title":"Bash started","detail":"Build · xác minh giao diện dashboard","status":null},{"id":"demo-event-43","type":"tool.end","timestamp":"2026-11-23T13:31:49.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Bổ sung trạng thái focus cho điều khiển","status":"success"},{"id":"demo-event-42","type":"tool.start","timestamp":"2026-11-23T13:31:45.736Z","agentId":"ui-agent","title":"Edit started","detail":"Bổ sung trạng thái focus cho điều khiển","status":null},{"id":"demo-event-41","type":"tool.end","timestamp":"2026-11-23T13:31:12.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Filters.tsx","status":"success"},{"id":"demo-event-40","type":"tool.start","timestamp":"2026-11-23T13:31:10.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Filters.tsx","status":null},{"id":"demo-event-18","type":"tool.end","timestamp":"2026-11-23T13:22:33.736Z","agentId":"ui-agent","title":"Bash completed","detail":"TypeScript · kiểm tra kiểu dữ liệu","status":"success"},{"id":"demo-event-17","type":"tool.start","timestamp":"2026-11-23T13:22:15.736Z","agentId":"ui-agent","title":"Bash started","detail":"TypeScript · kiểm tra kiểu dữ liệu","status":null},{"id":"demo-event-16","type":"tool.end","timestamp":"2026-11-23T13:21:18.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Căn chỉnh bộ lọc trên màn hình nhỏ","status":"success"},{"id":"demo-event-15","type":"tool.start","timestamp":"2026-11-23T13:21:15.736Z","agentId":"ui-agent","title":"Edit started","detail":"Căn chỉnh bộ lọc trên màn hình nhỏ","status":null},{"id":"demo-event-14","type":"tool.end","timestamp":"2026-11-23T13:19:59.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Thêm trạng thái tải và điều khiển bằng bàn phím","status":"success"},{"id":"demo-event-13","type":"tool.start","timestamp":"2026-11-23T13:19:55.736Z","agentId":"ui-agent","title":"Edit started","detail":"Thêm trạng thái tải và điều khiển bằng bàn phím","status":null},{"id":"demo-event-12","type":"tool.end","timestamp":"2026-11-23T13:19:17.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Dashboard.tsx","status":"success"},{"id":"demo-event-11","type":"tool.start","timestamp":"2026-11-23T13:19:15.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Dashboard.tsx","status":null},{"id":"demo-event-10","type":"tool.end","timestamp":"2026-11-23T13:18:46.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Filters.tsx","status":"success"},{"id":"demo-event-9","type":"tool.start","timestamp":"2026-11-23T13:18:45.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Filters.tsx","status":null},{"id":"demo-event-7","type":"agent.start","timestamp":"2026-11-23T13:18:30.736Z","agentId":"ui-agent","title":"Agent started","detail":"Tinh chỉnh bộ lọc và trạng thái tải của dashboard","status":null}],"modelActivity":null},{"id":"api-agent","parentId":"main","name":"Tích hợp API","type":"research","task":"Đối chiếu API, quyền truy cập và phản hồi trên staging","status":"waiting","startedAt":"2026-11-23T13:19:11.736Z","lastEventAt":"2026-11-23T13:31:05.736Z","endedAt":null,"model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":8300,"output":2700,"cacheRead":34100,"cacheWrite":2600},"toolCalls":4,"errors":0,"files":["src/lib/api-client.ts","docs/staging-checklist.md"],"tools":[{"id":"demo-tool-36","name":"Bash","status":"success","startedAt":"2026-11-23T13:30:25.736Z","endedAt":"2026-11-23T13:30:30.736Z","durationMs":5000,"summary":"Đọc kết quả kiểm tra mạng trên staging"},{"id":"demo-tool-34","name":"Read","status":"success","startedAt":"2026-11-23T13:23:35.736Z","endedAt":"2026-11-23T13:23:38.736Z","durationMs":3000,"summary":"docs/staging-checklist.md"},{"id":"demo-tool-32","name":"Bash","status":"success","startedAt":"2026-11-23T13:21:05.736Z","endedAt":"2026-11-23T13:21:14.736Z","durationMs":9000,"summary":"Kiểm tra phản hồi API trong môi trường thử nghiệm"},{"id":"demo-tool-30","name":"Read","status":"success","startedAt":"2026-11-23T13:19:45.736Z","endedAt":"2026-11-23T13:19:47.736Z","durationMs":2000,"summary":"src/lib/api-client.ts"}],"events":[{"id":"demo-event-39","type":"usage","timestamp":"2026-11-23T13:31:05.736Z","agentId":"api-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-38","type":"waiting","timestamp":"2026-11-23T13:30:55.736Z","agentId":"api-agent","title":"Waiting for input","detail":"Đang chờ xác nhận môi trường staging để kiểm tra tiếp","status":"waiting"},{"id":"demo-event-37","type":"tool.end","timestamp":"2026-11-23T13:30:30.736Z","agentId":"api-agent","title":"Bash completed","detail":"Đọc kết quả kiểm tra mạng trên staging","status":"success"},{"id":"demo-event-36","type":"tool.start","timestamp":"2026-11-23T13:30:25.736Z","agentId":"api-agent","title":"Bash started","detail":"Đọc kết quả kiểm tra mạng trên staging","status":null},{"id":"demo-event-35","type":"tool.end","timestamp":"2026-11-23T13:23:38.736Z","agentId":"api-agent","title":"Read completed","detail":"docs/staging-checklist.md","status":"success"},{"id":"demo-event-34","type":"tool.start","timestamp":"2026-11-23T13:23:35.736Z","agentId":"api-agent","title":"Read started","detail":"docs/staging-checklist.md","status":null},{"id":"demo-event-33","type":"tool.end","timestamp":"2026-11-23T13:21:14.736Z","agentId":"api-agent","title":"Bash completed","detail":"Kiểm tra phản hồi API trong môi trường thử nghiệm","status":"success"},{"id":"demo-event-32","type":"tool.start","timestamp":"2026-11-23T13:21:05.736Z","agentId":"api-agent","title":"Bash started","detail":"Kiểm tra phản hồi API trong môi trường thử nghiệm","status":null},{"id":"demo-event-31","type":"tool.end","timestamp":"2026-11-23T13:19:47.736Z","agentId":"api-agent","title":"Read completed","detail":"src/lib/api-client.ts","status":"success"},{"id":"demo-event-30","type":"tool.start","timestamp":"2026-11-23T13:19:45.736Z","agentId":"api-agent","title":"Read started","detail":"src/lib/api-client.ts","status":null},{"id":"demo-event-8","type":"agent.start","timestamp":"2026-11-23T13:19:11.736Z","agentId":"api-agent","title":"Agent started","detail":"Đối chiếu API, quyền truy cập và phản hồi trên staging","status":null}],"modelActivity":null},{"id":"e2e-agent","parentId":"ui-agent","name":"Kiểm thử tương tác","type":"test","task":"Kiểm tra bộ lọc, bàn phím và màn hình nhỏ","status":"completed","startedAt":"2026-11-23T13:23:05.736Z","lastEventAt":"2026-11-23T13:27:59.736Z","endedAt":"2026-11-23T13:27:59.736Z","model":"claude-haiku-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":4200,"output":1900,"cacheRead":18200,"cacheWrite":1600},"toolCalls":4,"errors":1,"files":["tests/dashboard-filters.spec.ts"],"tools":[{"id":"demo-tool-26","name":"Bash","status":"success","startedAt":"2026-11-23T13:26:35.736Z","endedAt":"2026-11-23T13:27:40.736Z","durationMs":65000,"summary":"Playwright · kiểm tra lại thao tác dashboard"},{"id":"demo-tool-24","name":"Edit","status":"success","startedAt":"2026-11-23T13:25:25.736Z","endedAt":"2026-11-23T13:25:29.736Z","durationMs":4000,"summary":"Điều chỉnh chờ dữ liệu API trong test"},{"id":"demo-tool-22","name":"Bash","status":"error","startedAt":"2026-11-23T13:24:15.736Z","endedAt":"2026-11-23T13:24:56.736Z","durationMs":41000,"summary":"Playwright · lần chạy đầu"},{"id":"demo-tool-20","name":"Read","status":"success","startedAt":"2026-11-23T13:23:30.736Z","endedAt":"2026-11-23T13:23:32.736Z","durationMs":2000,"summary":"tests/dashboard-filters.spec.ts"}],"events":[{"id":"demo-event-29","type":"agent.end","timestamp":"2026-11-23T13:27:59.736Z","agentId":"e2e-agent","title":"Agent ended","detail":"Đã kết thúc lượt kiểm tra; xem log tool để biết kết quả từng lệnh","status":null},{"id":"demo-event-28","type":"usage","timestamp":"2026-11-23T13:27:55.736Z","agentId":"e2e-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-27","type":"tool.end","timestamp":"2026-11-23T13:27:40.736Z","agentId":"e2e-agent","title":"Bash completed","detail":"Playwright · kiểm tra lại thao tác dashboard","status":"success"},{"id":"demo-event-26","type":"tool.start","timestamp":"2026-11-23T13:26:35.736Z","agentId":"e2e-agent","title":"Bash started","detail":"Playwright · kiểm tra lại thao tác dashboard","status":null},{"id":"demo-event-25","type":"tool.end","timestamp":"2026-11-23T13:25:29.736Z","agentId":"e2e-agent","title":"Edit completed","detail":"Điều chỉnh chờ dữ liệu API trong test","status":"success"},{"id":"demo-event-24","type":"tool.start","timestamp":"2026-11-23T13:25:25.736Z","agentId":"e2e-agent","title":"Edit started","detail":"Điều chỉnh chờ dữ liệu API trong test","status":null},{"id":"demo-event-23","type":"tool.error","timestamp":"2026-11-23T13:24:56.736Z","agentId":"e2e-agent","title":"Bash failed","detail":"Playwright · lần chạy đầu","status":"error"},{"id":"demo-event-22","type":"tool.start","timestamp":"2026-11-23T13:24:15.736Z","agentId":"e2e-agent","title":"Bash started","detail":"Playwright · lần chạy đầu","status":"error"},{"id":"demo-event-21","type":"tool.end","timestamp":"2026-11-23T13:23:32.736Z","agentId":"e2e-agent","title":"Read completed","detail":"tests/dashboard-filters.spec.ts","status":"success"},{"id":"demo-event-20","type":"tool.start","timestamp":"2026-11-23T13:23:30.736Z","agentId":"e2e-agent","title":"Read started","detail":"tests/dashboard-filters.spec.ts","status":null},{"id":"demo-event-19","type":"agent.start","timestamp":"2026-11-23T13:23:05.736Z","agentId":"e2e-agent","title":"Agent started","detail":"Kiểm tra bộ lọc, bàn phím và màn hình nhỏ","status":null}],"modelActivity":null}],"tasks":[{"id":"dashboard-ui","subject":"Cải thiện giao diện dashboard","status":"in_progress","owner":"ui-agent","blockedBy":[]},{"id":"api-check","subject":"Kiểm tra kết nối API trên staging","status":"in_progress","owner":"api-agent","blockedBy":[]},{"id":"interaction-tests","subject":"Kiểm tra thao tác và bàn phím","status":"completed","owner":"e2e-agent","blockedBy":[]},{"id":"release-summary","subject":"Tổng hợp kết quả xác minh","status":"pending","owner":"main","blockedBy":["dashboard-ui","api-check"]}],"events":[{"id":"demo-event-51","type":"task.update","timestamp":"2026-11-23T13:32:49.736Z","agentId":"main","title":"Task updated","detail":"Tổng hợp kết quả xác minh","status":null},{"id":"demo-event-47","type":"usage","timestamp":"2026-11-23T13:32:47.736Z","agentId":null,"title":"Usage reported","detail":null,"status":null},{"id":"demo-event-46","type":"usage","timestamp":"2026-11-23T13:32:46.736Z","agentId":"main","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-45","type":"usage","timestamp":"2026-11-23T13:32:43.736Z","agentId":"ui-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-44","type":"tool.start","timestamp":"2026-11-23T13:32:25.736Z","agentId":"ui-agent","title":"Bash started","detail":"Build · xác minh giao diện dashboard","status":null},{"id":"demo-event-43","type":"tool.end","timestamp":"2026-11-23T13:31:49.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Bổ sung trạng thái focus cho điều khiển","status":"success"},{"id":"demo-event-42","type":"tool.start","timestamp":"2026-11-23T13:31:45.736Z","agentId":"ui-agent","title":"Edit started","detail":"Bổ sung trạng thái focus cho điều khiển","status":null},{"id":"demo-event-41","type":"tool.end","timestamp":"2026-11-23T13:31:12.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Filters.tsx","status":"success"},{"id":"demo-event-40","type":"tool.start","timestamp":"2026-11-23T13:31:10.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Filters.tsx","status":null},{"id":"demo-event-39","type":"usage","timestamp":"2026-11-23T13:31:05.736Z","agentId":"api-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-38","type":"waiting","timestamp":"2026-11-23T13:30:55.736Z","agentId":"api-agent","title":"Waiting for input","detail":"Đang chờ xác nhận môi trường staging để kiểm tra tiếp","status":"waiting"},{"id":"demo-event-37","type":"tool.end","timestamp":"2026-11-23T13:30:30.736Z","agentId":"api-agent","title":"Bash completed","detail":"Đọc kết quả kiểm tra mạng trên staging","status":"success"},{"id":"demo-event-36","type":"tool.start","timestamp":"2026-11-23T13:30:25.736Z","agentId":"api-agent","title":"Bash started","detail":"Đọc kết quả kiểm tra mạng trên staging","status":null},{"id":"demo-event-50","type":"task.update","timestamp":"2026-11-23T13:28:00.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra thao tác và bàn phím","status":null},{"id":"demo-event-29","type":"agent.end","timestamp":"2026-11-23T13:27:59.736Z","agentId":"e2e-agent","title":"Agent ended","detail":"Đã kết thúc lượt kiểm tra; xem log tool để biết kết quả từng lệnh","status":null},{"id":"demo-event-28","type":"usage","timestamp":"2026-11-23T13:27:55.736Z","agentId":"e2e-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-27","type":"tool.end","timestamp":"2026-11-23T13:27:40.736Z","agentId":"e2e-agent","title":"Bash completed","detail":"Playwright · kiểm tra lại thao tác dashboard","status":"success"},{"id":"demo-event-26","type":"tool.start","timestamp":"2026-11-23T13:26:35.736Z","agentId":"e2e-agent","title":"Bash started","detail":"Playwright · kiểm tra lại thao tác dashboard","status":null},{"id":"demo-event-25","type":"tool.end","timestamp":"2026-11-23T13:25:29.736Z","agentId":"e2e-agent","title":"Edit completed","detail":"Điều chỉnh chờ dữ liệu API trong test","status":"success"},{"id":"demo-event-24","type":"tool.start","timestamp":"2026-11-23T13:25:25.736Z","agentId":"e2e-agent","title":"Edit started","detail":"Điều chỉnh chờ dữ liệu API trong test","status":null},{"id":"demo-event-23","type":"tool.error","timestamp":"2026-11-23T13:24:56.736Z","agentId":"e2e-agent","title":"Bash failed","detail":"Playwright · lần chạy đầu","status":"error"},{"id":"demo-event-22","type":"tool.start","timestamp":"2026-11-23T13:24:15.736Z","agentId":"e2e-agent","title":"Bash started","detail":"Playwright · lần chạy đầu","status":"error"},{"id":"demo-event-35","type":"tool.end","timestamp":"2026-11-23T13:23:38.736Z","agentId":"api-agent","title":"Read completed","detail":"docs/staging-checklist.md","status":"success"},{"id":"demo-event-34","type":"tool.start","timestamp":"2026-11-23T13:23:35.736Z","agentId":"api-agent","title":"Read started","detail":"docs/staging-checklist.md","status":null},{"id":"demo-event-21","type":"tool.end","timestamp":"2026-11-23T13:23:32.736Z","agentId":"e2e-agent","title":"Read completed","detail":"tests/dashboard-filters.spec.ts","status":"success"},{"id":"demo-event-20","type":"tool.start","timestamp":"2026-11-23T13:23:30.736Z","agentId":"e2e-agent","title":"Read started","detail":"tests/dashboard-filters.spec.ts","status":null},{"id":"demo-event-19","type":"agent.start","timestamp":"2026-11-23T13:23:05.736Z","agentId":"e2e-agent","title":"Agent started","detail":"Kiểm tra bộ lọc, bàn phím và màn hình nhỏ","status":null},{"id":"demo-event-18","type":"tool.end","timestamp":"2026-11-23T13:22:33.736Z","agentId":"ui-agent","title":"Bash completed","detail":"TypeScript · kiểm tra kiểu dữ liệu","status":"success"},{"id":"demo-event-17","type":"tool.start","timestamp":"2026-11-23T13:22:15.736Z","agentId":"ui-agent","title":"Bash started","detail":"TypeScript · kiểm tra kiểu dữ liệu","status":null},{"id":"demo-event-16","type":"tool.end","timestamp":"2026-11-23T13:21:18.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Căn chỉnh bộ lọc trên màn hình nhỏ","status":"success"},{"id":"demo-event-15","type":"tool.start","timestamp":"2026-11-23T13:21:15.736Z","agentId":"ui-agent","title":"Edit started","detail":"Căn chỉnh bộ lọc trên màn hình nhỏ","status":null},{"id":"demo-event-33","type":"tool.end","timestamp":"2026-11-23T13:21:14.736Z","agentId":"api-agent","title":"Bash completed","detail":"Kiểm tra phản hồi API trong môi trường thử nghiệm","status":"success"},{"id":"demo-event-32","type":"tool.start","timestamp":"2026-11-23T13:21:05.736Z","agentId":"api-agent","title":"Bash started","detail":"Kiểm tra phản hồi API trong môi trường thử nghiệm","status":null},{"id":"demo-event-14","type":"tool.end","timestamp":"2026-11-23T13:19:59.736Z","agentId":"ui-agent","title":"Edit completed","detail":"Thêm trạng thái tải và điều khiển bằng bàn phím","status":"success"},{"id":"demo-event-13","type":"tool.start","timestamp":"2026-11-23T13:19:55.736Z","agentId":"ui-agent","title":"Edit started","detail":"Thêm trạng thái tải và điều khiển bằng bàn phím","status":null},{"id":"demo-event-31","type":"tool.end","timestamp":"2026-11-23T13:19:47.736Z","agentId":"api-agent","title":"Read completed","detail":"src/lib/api-client.ts","status":"success"},{"id":"demo-event-30","type":"tool.start","timestamp":"2026-11-23T13:19:45.736Z","agentId":"api-agent","title":"Read started","detail":"src/lib/api-client.ts","status":null},{"id":"demo-event-49","type":"task.update","timestamp":"2026-11-23T13:19:20.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra kết nối API trên staging","status":null},{"id":"demo-event-12","type":"tool.end","timestamp":"2026-11-23T13:19:17.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Dashboard.tsx","status":"success"},{"id":"demo-event-11","type":"tool.start","timestamp":"2026-11-23T13:19:15.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Dashboard.tsx","status":null},{"id":"demo-event-8","type":"agent.start","timestamp":"2026-11-23T13:19:11.736Z","agentId":"api-agent","title":"Agent started","detail":"Đối chiếu API, quyền truy cập và phản hồi trên staging","status":null},{"id":"demo-event-10","type":"tool.end","timestamp":"2026-11-23T13:18:46.736Z","agentId":"ui-agent","title":"Read completed","detail":"src/components/dashboard/Filters.tsx","status":"success"},{"id":"demo-event-9","type":"tool.start","timestamp":"2026-11-23T13:18:45.736Z","agentId":"ui-agent","title":"Read started","detail":"src/components/dashboard/Filters.tsx","status":null},{"id":"demo-event-7","type":"agent.start","timestamp":"2026-11-23T13:18:30.736Z","agentId":"ui-agent","title":"Agent started","detail":"Tinh chỉnh bộ lọc và trạng thái tải của dashboard","status":null},{"id":"demo-event-48","type":"task.update","timestamp":"2026-11-23T13:18:15.736Z","agentId":"main","title":"Task updated","detail":"Cải thiện giao diện dashboard","status":null},{"id":"demo-event-6","type":"tool.end","timestamp":"2026-11-23T13:17:58.736Z","agentId":"main","title":"Glob completed","detail":"src/components/dashboard/**","status":"success"},{"id":"demo-event-5","type":"tool.start","timestamp":"2026-11-23T13:17:55.736Z","agentId":"main","title":"Glob started","detail":"src/components/dashboard/**","status":null},{"id":"demo-event-4","type":"tool.end","timestamp":"2026-11-23T13:17:32.736Z","agentId":"main","title":"Read completed","detail":"README.md · yêu cầu và cách chạy dự án","status":"success"},{"id":"demo-event-3","type":"tool.start","timestamp":"2026-11-23T13:17:30.736Z","agentId":"main","title":"Read started","detail":"README.md · yêu cầu và cách chạy dự án","status":null},{"id":"demo-event-2","type":"turn.start","timestamp":"2026-11-23T13:17:25.736Z","agentId":"main","title":"Turn started","detail":"Hoàn thiện dashboard và kiểm tra dữ liệu API","status":null},{"id":"demo-event-1","type":"session.start","timestamp":"2026-11-23T13:17:15.736Z","agentId":"main","title":"Session started","detail":null,"status":null}]},{"id":"demo-review-session","project":"sample-code-review","cwd":"~/projects/sample-code-review","status":"running","startedAt":"2026-11-23T13:24:15.736Z","lastEventAt":"2026-11-23T13:32:48.736Z","endedAt":null,"model":"claude-sonnet-4-5","contextPercent":27,"rateLimits":[],"costUsd":0.25,"costEstimated":true,"costIncomplete":false,"tokens":{"input":16200,"output":5650,"cacheRead":63400,"cacheWrite":6100},"agents":[{"id":"main","parentId":null,"name":"Điều phối review","type":"main","task":"Review một MR minh họa, thu thập findings và bằng chứng","status":"running","startedAt":"2026-11-23T13:24:15.736Z","lastEventAt":"2026-11-23T13:32:48.736Z","endedAt":null,"model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":2900,"output":800,"cacheRead":9500,"cacheWrite":900},"toolCalls":1,"errors":0,"files":[],"tools":[{"id":"demo-tool-54","name":"Bash","status":"success","startedAt":"2026-11-23T13:24:35.736Z","endedAt":"2026-11-23T13:24:39.736Z","durationMs":4000,"summary":"Đọc diff và danh sách file thay đổi"}],"events":[{"id":"demo-event-89","type":"task.update","timestamp":"2026-11-23T13:32:48.736Z","agentId":"main","title":"Task updated","detail":"Tổng hợp findings có bằng chứng","status":null},{"id":"demo-event-83","type":"usage","timestamp":"2026-11-23T13:32:44.736Z","agentId":"main","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-88","type":"task.update","timestamp":"2026-11-23T13:30:15.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra quyền và dữ liệu","status":null},{"id":"demo-event-86","type":"task.update","timestamp":"2026-11-23T13:27:46.736Z","agentId":"main","title":"Task updated","detail":"Xác định phạm vi MR","status":null},{"id":"demo-event-87","type":"task.update","timestamp":"2026-11-23T13:25:45.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra lỗi logic","status":null},{"id":"demo-event-85","type":"task.update","timestamp":"2026-11-23T13:25:05.736Z","agentId":"main","title":"Task updated","detail":"Xác định phạm vi MR","status":null},{"id":"demo-event-55","type":"tool.end","timestamp":"2026-11-23T13:24:39.736Z","agentId":"main","title":"Bash completed","detail":"Đọc diff và danh sách file thay đổi","status":"success"},{"id":"demo-event-54","type":"tool.start","timestamp":"2026-11-23T13:24:35.736Z","agentId":"main","title":"Bash started","detail":"Đọc diff và danh sách file thay đổi","status":null},{"id":"demo-event-53","type":"turn.start","timestamp":"2026-11-23T13:24:25.736Z","agentId":"main","title":"Turn started","detail":"Review một MR minh họa, thu thập findings và bằng chứng","status":null},{"id":"demo-event-52","type":"session.start","timestamp":"2026-11-23T13:24:15.736Z","agentId":"main","title":"Session started","detail":null,"status":null}],"modelActivity":null},{"id":"diff-agent","parentId":"main","name":"Phân tích thay đổi","type":"review","task":"Xác định phạm vi thay đổi và các điểm cần đối chiếu","status":"completed","startedAt":"2026-11-23T13:24:55.736Z","lastEventAt":"2026-11-23T13:27:45.736Z","endedAt":"2026-11-23T13:27:45.736Z","model":"claude-haiku-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":2800,"output":950,"cacheRead":11400,"cacheWrite":1200},"toolCalls":3,"errors":0,"files":["src/api/review.ts","src/types/review.ts"],"tools":[{"id":"demo-tool-63","name":"Read","status":"success","startedAt":"2026-11-23T13:27:05.736Z","endedAt":"2026-11-23T13:27:08.736Z","durationMs":3000,"summary":"src/types/review.ts"},{"id":"demo-tool-61","name":"Grep","status":"success","startedAt":"2026-11-23T13:25:55.736Z","endedAt":"2026-11-23T13:25:57.736Z","durationMs":2000,"summary":"Các nơi gọi review handler"},{"id":"demo-tool-59","name":"Read","status":"success","startedAt":"2026-11-23T13:25:00.736Z","endedAt":"2026-11-23T13:25:02.736Z","durationMs":2000,"summary":"src/api/review.ts"}],"events":[{"id":"demo-event-66","type":"agent.end","timestamp":"2026-11-23T13:27:45.736Z","agentId":"diff-agent","title":"Agent ended","detail":"Đã gửi bản đồ thay đổi cho điều phối","status":null},{"id":"demo-event-65","type":"usage","timestamp":"2026-11-23T13:27:35.736Z","agentId":"diff-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-64","type":"tool.end","timestamp":"2026-11-23T13:27:08.736Z","agentId":"diff-agent","title":"Read completed","detail":"src/types/review.ts","status":"success"},{"id":"demo-event-63","type":"tool.start","timestamp":"2026-11-23T13:27:05.736Z","agentId":"diff-agent","title":"Read started","detail":"src/types/review.ts","status":null},{"id":"demo-event-62","type":"tool.end","timestamp":"2026-11-23T13:25:57.736Z","agentId":"diff-agent","title":"Grep completed","detail":"Các nơi gọi review handler","status":"success"},{"id":"demo-event-61","type":"tool.start","timestamp":"2026-11-23T13:25:55.736Z","agentId":"diff-agent","title":"Grep started","detail":"Các nơi gọi review handler","status":null},{"id":"demo-event-60","type":"tool.end","timestamp":"2026-11-23T13:25:02.736Z","agentId":"diff-agent","title":"Read completed","detail":"src/api/review.ts","status":"success"},{"id":"demo-event-59","type":"tool.start","timestamp":"2026-11-23T13:25:00.736Z","agentId":"diff-agent","title":"Read started","detail":"src/api/review.ts","status":null},{"id":"demo-event-56","type":"agent.start","timestamp":"2026-11-23T13:24:55.736Z","agentId":"diff-agent","title":"Agent started","detail":"Xác định phạm vi thay đổi và các điểm cần đối chiếu","status":null}],"modelActivity":null},{"id":"bugs-agent","parentId":"main","name":"Kiểm tra logic","type":"review","task":"Kiểm tra nhánh xử lý lỗi và tính nhất quán dữ liệu","status":"running","startedAt":"2026-11-23T13:25:10.736Z","lastEventAt":"2026-11-23T13:32:41.736Z","endedAt":null,"model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":6300,"output":2100,"cacheRead":26300,"cacheWrite":2300},"toolCalls":4,"errors":0,"files":["src/services/review-runner.ts","tests/review-runner.test.ts"],"tools":[{"id":"demo-tool-81","name":"Bash","status":"running","startedAt":"2026-11-23T13:32:10.736Z","endedAt":null,"durationMs":null,"summary":"Chạy kiểm tra điều kiện timeout"},{"id":"demo-tool-79","name":"Read","status":"success","startedAt":"2026-11-23T13:29:15.736Z","endedAt":"2026-11-23T13:29:18.736Z","durationMs":3000,"summary":"tests/review-runner.test.ts"},{"id":"demo-tool-77","name":"Grep","status":"success","startedAt":"2026-11-23T13:26:25.736Z","endedAt":"2026-11-23T13:26:27.736Z","durationMs":2000,"summary":"Các nhánh timeout và retry"},{"id":"demo-tool-75","name":"Read","status":"success","startedAt":"2026-11-23T13:25:25.736Z","endedAt":"2026-11-23T13:25:27.736Z","durationMs":2000,"summary":"src/services/review-runner.ts"}],"events":[{"id":"demo-event-82","type":"usage","timestamp":"2026-11-23T13:32:41.736Z","agentId":"bugs-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-81","type":"tool.start","timestamp":"2026-11-23T13:32:10.736Z","agentId":"bugs-agent","title":"Bash started","detail":"Chạy kiểm tra điều kiện timeout","status":null},{"id":"demo-event-80","type":"tool.end","timestamp":"2026-11-23T13:29:18.736Z","agentId":"bugs-agent","title":"Read completed","detail":"tests/review-runner.test.ts","status":"success"},{"id":"demo-event-79","type":"tool.start","timestamp":"2026-11-23T13:29:15.736Z","agentId":"bugs-agent","title":"Read started","detail":"tests/review-runner.test.ts","status":null},{"id":"demo-event-78","type":"tool.end","timestamp":"2026-11-23T13:26:27.736Z","agentId":"bugs-agent","title":"Grep completed","detail":"Các nhánh timeout và retry","status":"success"},{"id":"demo-event-77","type":"tool.start","timestamp":"2026-11-23T13:26:25.736Z","agentId":"bugs-agent","title":"Grep started","detail":"Các nhánh timeout và retry","status":null},{"id":"demo-event-76","type":"tool.end","timestamp":"2026-11-23T13:25:27.736Z","agentId":"bugs-agent","title":"Read completed","detail":"src/services/review-runner.ts","status":"success"},{"id":"demo-event-75","type":"tool.start","timestamp":"2026-11-23T13:25:25.736Z","agentId":"bugs-agent","title":"Read started","detail":"src/services/review-runner.ts","status":null},{"id":"demo-event-57","type":"agent.start","timestamp":"2026-11-23T13:25:10.736Z","agentId":"bugs-agent","title":"Agent started","detail":"Kiểm tra nhánh xử lý lỗi và tính nhất quán dữ liệu","status":null}],"modelActivity":null},{"id":"security-agent","parentId":"main","name":"Quyền & dữ liệu","type":"review","task":"Đọc các đường dẫn kiểm tra quyền và dữ liệu đầu vào","status":"completed","startedAt":"2026-11-23T13:25:35.736Z","lastEventAt":"2026-11-23T13:30:05.736Z","endedAt":"2026-11-23T13:30:05.736Z","model":"claude-sonnet-4-5","costUsd":null,"costEstimated":null,"costIncomplete":null,"tokens":{"input":4200,"output":1800,"cacheRead":16200,"cacheWrite":1700},"toolCalls":3,"errors":0,"files":["src/auth/permissions.ts","src/api/review.ts"],"tools":[{"id":"demo-tool-71","name":"Bash","status":"success","startedAt":"2026-11-23T13:28:35.736Z","endedAt":"2026-11-23T13:28:52.736Z","durationMs":17000,"summary":"Chạy bộ kiểm tra quyền truy cập"},{"id":"demo-tool-69","name":"Read","status":"success","startedAt":"2026-11-23T13:26:55.736Z","endedAt":"2026-11-23T13:26:56.736Z","durationMs":1000,"summary":"src/api/review.ts"},{"id":"demo-tool-67","name":"Read","status":"success","startedAt":"2026-11-23T13:25:45.736Z","endedAt":"2026-11-23T13:25:47.736Z","durationMs":2000,"summary":"src/auth/permissions.ts"}],"events":[{"id":"demo-event-74","type":"agent.end","timestamp":"2026-11-23T13:30:05.736Z","agentId":"security-agent","title":"Agent ended","detail":"Đã kết thúc kiểm tra; findings được chuyển cho điều phối","status":null},{"id":"demo-event-73","type":"usage","timestamp":"2026-11-23T13:29:55.736Z","agentId":"security-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-72","type":"tool.end","timestamp":"2026-11-23T13:28:52.736Z","agentId":"security-agent","title":"Bash completed","detail":"Chạy bộ kiểm tra quyền truy cập","status":"success"},{"id":"demo-event-71","type":"tool.start","timestamp":"2026-11-23T13:28:35.736Z","agentId":"security-agent","title":"Bash started","detail":"Chạy bộ kiểm tra quyền truy cập","status":null},{"id":"demo-event-70","type":"tool.end","timestamp":"2026-11-23T13:26:56.736Z","agentId":"security-agent","title":"Read completed","detail":"src/api/review.ts","status":"success"},{"id":"demo-event-69","type":"tool.start","timestamp":"2026-11-23T13:26:55.736Z","agentId":"security-agent","title":"Read started","detail":"src/api/review.ts","status":null},{"id":"demo-event-68","type":"tool.end","timestamp":"2026-11-23T13:25:47.736Z","agentId":"security-agent","title":"Read completed","detail":"src/auth/permissions.ts","status":"success"},{"id":"demo-event-67","type":"tool.start","timestamp":"2026-11-23T13:25:45.736Z","agentId":"security-agent","title":"Read started","detail":"src/auth/permissions.ts","status":null},{"id":"demo-event-58","type":"agent.start","timestamp":"2026-11-23T13:25:35.736Z","agentId":"security-agent","title":"Agent started","detail":"Đọc các đường dẫn kiểm tra quyền và dữ liệu đầu vào","status":null}],"modelActivity":null}],"tasks":[{"id":"scope","subject":"Xác định phạm vi MR","status":"completed","owner":"diff-agent","blockedBy":[]},{"id":"logic","subject":"Kiểm tra lỗi logic","status":"in_progress","owner":"bugs-agent","blockedBy":[]},{"id":"security","subject":"Kiểm tra quyền và dữ liệu","status":"completed","owner":"security-agent","blockedBy":[]},{"id":"findings","subject":"Tổng hợp findings có bằng chứng","status":"pending","owner":"main","blockedBy":["logic"]}],"events":[{"id":"demo-event-89","type":"task.update","timestamp":"2026-11-23T13:32:48.736Z","agentId":"main","title":"Task updated","detail":"Tổng hợp findings có bằng chứng","status":null},{"id":"demo-event-84","type":"usage","timestamp":"2026-11-23T13:32:45.736Z","agentId":null,"title":"Usage reported","detail":null,"status":null},{"id":"demo-event-83","type":"usage","timestamp":"2026-11-23T13:32:44.736Z","agentId":"main","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-82","type":"usage","timestamp":"2026-11-23T13:32:41.736Z","agentId":"bugs-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-81","type":"tool.start","timestamp":"2026-11-23T13:32:10.736Z","agentId":"bugs-agent","title":"Bash started","detail":"Chạy kiểm tra điều kiện timeout","status":null},{"id":"demo-event-88","type":"task.update","timestamp":"2026-11-23T13:30:15.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra quyền và dữ liệu","status":null},{"id":"demo-event-74","type":"agent.end","timestamp":"2026-11-23T13:30:05.736Z","agentId":"security-agent","title":"Agent ended","detail":"Đã kết thúc kiểm tra; findings được chuyển cho điều phối","status":null},{"id":"demo-event-73","type":"usage","timestamp":"2026-11-23T13:29:55.736Z","agentId":"security-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-80","type":"tool.end","timestamp":"2026-11-23T13:29:18.736Z","agentId":"bugs-agent","title":"Read completed","detail":"tests/review-runner.test.ts","status":"success"},{"id":"demo-event-79","type":"tool.start","timestamp":"2026-11-23T13:29:15.736Z","agentId":"bugs-agent","title":"Read started","detail":"tests/review-runner.test.ts","status":null},{"id":"demo-event-72","type":"tool.end","timestamp":"2026-11-23T13:28:52.736Z","agentId":"security-agent","title":"Bash completed","detail":"Chạy bộ kiểm tra quyền truy cập","status":"success"},{"id":"demo-event-71","type":"tool.start","timestamp":"2026-11-23T13:28:35.736Z","agentId":"security-agent","title":"Bash started","detail":"Chạy bộ kiểm tra quyền truy cập","status":null},{"id":"demo-event-86","type":"task.update","timestamp":"2026-11-23T13:27:46.736Z","agentId":"main","title":"Task updated","detail":"Xác định phạm vi MR","status":null},{"id":"demo-event-66","type":"agent.end","timestamp":"2026-11-23T13:27:45.736Z","agentId":"diff-agent","title":"Agent ended","detail":"Đã gửi bản đồ thay đổi cho điều phối","status":null},{"id":"demo-event-65","type":"usage","timestamp":"2026-11-23T13:27:35.736Z","agentId":"diff-agent","title":"Usage reported","detail":null,"status":null},{"id":"demo-event-64","type":"tool.end","timestamp":"2026-11-23T13:27:08.736Z","agentId":"diff-agent","title":"Read completed","detail":"src/types/review.ts","status":"success"},{"id":"demo-event-63","type":"tool.start","timestamp":"2026-11-23T13:27:05.736Z","agentId":"diff-agent","title":"Read started","detail":"src/types/review.ts","status":null},{"id":"demo-event-70","type":"tool.end","timestamp":"2026-11-23T13:26:56.736Z","agentId":"security-agent","title":"Read completed","detail":"src/api/review.ts","status":"success"},{"id":"demo-event-69","type":"tool.start","timestamp":"2026-11-23T13:26:55.736Z","agentId":"security-agent","title":"Read started","detail":"src/api/review.ts","status":null},{"id":"demo-event-78","type":"tool.end","timestamp":"2026-11-23T13:26:27.736Z","agentId":"bugs-agent","title":"Grep completed","detail":"Các nhánh timeout và retry","status":"success"},{"id":"demo-event-77","type":"tool.start","timestamp":"2026-11-23T13:26:25.736Z","agentId":"bugs-agent","title":"Grep started","detail":"Các nhánh timeout và retry","status":null},{"id":"demo-event-62","type":"tool.end","timestamp":"2026-11-23T13:25:57.736Z","agentId":"diff-agent","title":"Grep completed","detail":"Các nơi gọi review handler","status":"success"},{"id":"demo-event-61","type":"tool.start","timestamp":"2026-11-23T13:25:55.736Z","agentId":"diff-agent","title":"Grep started","detail":"Các nơi gọi review handler","status":null},{"id":"demo-event-68","type":"tool.end","timestamp":"2026-11-23T13:25:47.736Z","agentId":"security-agent","title":"Read completed","detail":"src/auth/permissions.ts","status":"success"},{"id":"demo-event-87","type":"task.update","timestamp":"2026-11-23T13:25:45.736Z","agentId":"main","title":"Task updated","detail":"Kiểm tra lỗi logic","status":null},{"id":"demo-event-67","type":"tool.start","timestamp":"2026-11-23T13:25:45.736Z","agentId":"security-agent","title":"Read started","detail":"src/auth/permissions.ts","status":null},{"id":"demo-event-58","type":"agent.start","timestamp":"2026-11-23T13:25:35.736Z","agentId":"security-agent","title":"Agent started","detail":"Đọc các đường dẫn kiểm tra quyền và dữ liệu đầu vào","status":null},{"id":"demo-event-76","type":"tool.end","timestamp":"2026-11-23T13:25:27.736Z","agentId":"bugs-agent","title":"Read completed","detail":"src/services/review-runner.ts","status":"success"},{"id":"demo-event-75","type":"tool.start","timestamp":"2026-11-23T13:25:25.736Z","agentId":"bugs-agent","title":"Read started","detail":"src/services/review-runner.ts","status":null},{"id":"demo-event-57","type":"agent.start","timestamp":"2026-11-23T13:25:10.736Z","agentId":"bugs-agent","title":"Agent started","detail":"Kiểm tra nhánh xử lý lỗi và tính nhất quán dữ liệu","status":null},{"id":"demo-event-85","type":"task.update","timestamp":"2026-11-23T13:25:05.736Z","agentId":"main","title":"Task updated","detail":"Xác định phạm vi MR","status":null},{"id":"demo-event-60","type":"tool.end","timestamp":"2026-11-23T13:25:02.736Z","agentId":"diff-agent","title":"Read completed","detail":"src/api/review.ts","status":"success"},{"id":"demo-event-59","type":"tool.start","timestamp":"2026-11-23T13:25:00.736Z","agentId":"diff-agent","title":"Read started","detail":"src/api/review.ts","status":null},{"id":"demo-event-56","type":"agent.start","timestamp":"2026-11-23T13:24:55.736Z","agentId":"diff-agent","title":"Agent started","detail":"Xác định phạm vi thay đổi và các điểm cần đối chiếu","status":null},{"id":"demo-event-55","type":"tool.end","timestamp":"2026-11-23T13:24:39.736Z","agentId":"main","title":"Bash completed","detail":"Đọc diff và danh sách file thay đổi","status":"success"},{"id":"demo-event-54","type":"tool.start","timestamp":"2026-11-23T13:24:35.736Z","agentId":"main","title":"Bash started","detail":"Đọc diff và danh sách file thay đổi","status":null},{"id":"demo-event-53","type":"turn.start","timestamp":"2026-11-23T13:24:25.736Z","agentId":"main","title":"Turn started","detail":"Review một MR minh họa, thu thập findings và bằng chứng","status":null},{"id":"demo-event-52","type":"session.start","timestamp":"2026-11-23T13:24:15.736Z","agentId":"main","title":"Session started","detail":null,"status":null}]}]};</script>
+<script>/* Agent Observatory browser UI. No external assets or application dependencies. */
+(() => {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+  const ICONS = {
+    overview: ['M3 3h7v7H3z', 'M14 3h7v7h-7z', 'M3 14h7v7H3z', 'M14 14h7v7h-7z'],
+    timeline: ['M4 3v18', 'M8 6h12', 'M8 12h8', 'M12 18h8'],
+    activity: ['M3 12h4l3-8 4 16 3-8h4'],
+    lock: ['M6 10h12v11H6z', 'M8 10V7a4 4 0 0 1 8 0v3'],
+    moon: ['M20 15a8 8 0 0 1-11-11A9 9 0 1 0 20 15z'],
+    sun: ['M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8', 'M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5'],
+    pause: ['M8 5v14M16 5v14'],
+    play: ['M8 4l12 8-12 8z'],
+    refresh: ['M20 7v5h-5', 'M20 12a8 8 0 1 0-2 5', 'M20 7v5'],
+    search: ['M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15', 'M16 16l5 5'],
+    tool: ['M14 5a6 6 0 0 0-7 8l-5 5 4 4 5-5a6 6 0 0 0 8-7l-4 4-5-5z'],
+    layers: ['M12 2l10 6-10 6L2 8z', 'M2 12l10 6 10-6', 'M2 16l10 6 10-6'],
+    info: ['M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20', 'M12 10v7', 'M12 6v1'],
+    warning: ['M12 3 2 21h20z', 'M12 9v5', 'M12 17v1'],
+    folder: ['M3 6h7l2 3h9v12H3z', 'M3 6V3h6l3 3h8v3'],
+    file: ['M5 2h9l5 5v15H5z', 'M14 2v6h5', 'M8 12h8M8 16h6'],
+    cursor: ['M4 3l17 10-8 2-3 7z'],
+    arrow: ['M5 12h14', 'M13 6l6 6-6 6'],
+    radar: ['M12 3a9 9 0 1 0 9 9', 'M12 7a5 5 0 1 0 5 5', 'M12 12l8-8'],
+    copy: ['M8 8h13v13H8z', 'M16 8V3H3v13h5']
+  };
+  const statusLabels = { running: 'Đang làm', waiting: 'Chờ bạn', idle: 'Tạm nghỉ', completed: 'Đã kết thúc', error: 'Có lỗi', unknown: 'Chưa rõ' };
+  const statusMarks = { running: '●', waiting: '◐', idle: '○', completed: '✓', error: '!', unknown: '—' };
+  const viewNames = {
+    overview: ['Tổng quan agents', 'Mỗi agent, mỗi bước làm việc. Trong cùng một góc nhìn.'],
+    timeline: ['Dòng thời gian', 'Nhìn cách agents phối hợp và các tool diễn ra song song.'],
+    activity: ['Luồng hoạt động', 'Theo dấu từng sự kiện để hiểu công việc vừa diễn ra.']
+  };
+  const params = new URLSearchParams(location.search);
+  const state = {
+    snapshot: null, pending: null, view: 'overview', selected: null, inspectorTab: 'overview',
+    filters: { search: '', project: '', session: '', status: '' },
+    paused: false, connected: false, streamOpen: false, error: null, loading: false,
+    lastFetch: null, source: null, request: 0, static: Boolean(window.__AGENT_OBSERVATORY_SNAPSHOT__),
+    demo: params.get('demo') === '1', optionSignature: '',
+  };
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  }
+  function icon(name) {
+    const node = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    for (const [k, v] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.5', 'stroke-linecap': 'square', 'stroke-linejoin': 'miter', 'aria-hidden': 'true' })) node.setAttribute(k, v);
+    for (const d of ICONS[name] || ICONS.info) {
+      const path = document.createElementNS(node.namespaceURI, 'path');
+      path.setAttribute('d', d); node.append(path);
+    }
+    return node;
+  }
+  function hydrateIcons(root = document) {
+    for (const holder of root.querySelectorAll('[data-icon]')) holder.replaceChildren(icon(holder.dataset.icon));
+  }
+  function num(v) { return typeof v === 'number' && Number.isFinite(v) ? v : null; }
+  function ms(v) { const n = Date.parse(v); return Number.isFinite(n) ? n : null; }
+  function numeric(v) { return num(v) === null ? '—' : new Intl.NumberFormat('vi-VN').format(v); }
+  function shortNum(v) { return num(v) === null ? '—' : v >= 1000 ? `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1 }).format(v / 1000)}k` : numeric(v); }
+  function statusOf(v) { return Object.hasOwn(statusLabels, v) ? v : 'unknown'; }
+  function now() { return state.demo || state.static ? ms(state.snapshot?.generatedAt) ?? Date.now() : Date.now(); }
+  function duration(start, end) {
+    const a = ms(start), b = ms(end) ?? now();
+    if (a === null || b < a) return '—';
+    const secs = Math.floor((b - a) / 1000);
+    if (secs < 60) return `${secs}s`;
+    if (secs < 3600) return `${Math.floor(secs / 60)}m ${String(secs % 60).padStart(2, '0')}s`;
+    return `${Math.floor(secs / 3600)}h ${Math.floor((secs % 3600) / 60)}m`;
+  }
+  function relative(timestamp) {
+    const t = ms(timestamp); if (t === null) return 'Chưa có dữ liệu';
+    const sec = Math.max(0, Math.floor((now() - t) / 1000));
+    if (sec < 10) return 'Vừa cập nhật';
+    if (sec < 60) return `${sec} giây trước`;
+    if (sec < 3600) return `${Math.floor(sec / 60)} phút trước`;
+    return `${Math.floor(sec / 3600)} giờ trước`;
+  }
+  function clock(timestamp, seconds = false) {
+    const t = ms(timestamp); if (t === null) return '—';
+    return new Intl.DateTimeFormat('vi-VN', { hour: '2-digit', minute: '2-digit', ...(seconds ? { second: '2-digit' } : {}) }).format(t);
+  }
+  function fullDate(timestamp) {
+    const t = ms(timestamp); if (t === null) return 'Chưa có dữ liệu';
+    return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'medium' }).format(t);
+  }
+  function key(session, agent) { return `${session.id}::${agent.id}`; }
+  function initials(agent) {
+    if (agent.type === 'main') return 'M';
+    return (agent.name || agent.type || 'A').split(/[\s_/-]+/).filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+  }
+  function modelLabel(model) { return model ? String(model).replace(/^claude-/, '').replace(/-20\d{6}$/, '') : 'Model chưa được báo'; }
+  function badge(status) {
+    const value = statusOf(status);
+    const node = el('span', `status status-${value}`);
+    const mark = el('span', 'status-marker', statusMarks[value]); mark.setAttribute('aria-hidden', 'true');
+    node.append(mark, el('span', '', statusLabels[value])); return node;
+  }
+  function toolStatus(status) {
+    const labels = { running: 'Đang chạy', success: 'Thành công', error: 'Có lỗi', denied: 'Bị từ chối', cancelled: 'Đã ngắt', completed: 'Đã xong' };
+    return labels[status] || 'Chưa rõ';
+  }
+  function costLabel(record) {
+    if (num(record?.costUsd) === null) return '—';
+    const value = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 4 }).format(record.costUsd);
+    return `${record.costEstimated !== false ? '≈ ' : ''}${value}${record.costIncomplete ? ' · chưa đủ giá' : ''}`;
+  }
+  function announce(message) { $('announcement').textContent = message; }
+  function sessions() { return Array.isArray(state.snapshot?.sessions) ? state.snapshot.sessions : []; }
+  function allRows() { return sessions().flatMap(session => (Array.isArray(session.agents) ? session.agents : []).map(agent => ({ session, agent, key: key(session, agent) }))); }
+  function filteredRows() {
+    const f = state.filters, query = f.search.trim().toLocaleLowerCase('vi');
+    return allRows().filter(({ session, agent }) => (!f.project || session.project === f.project)
+      && (!f.session || session.id === f.session)
+      && (!f.status || statusOf(agent.status) === f.status)
+      && (!query || [agent.name, agent.type, agent.task, agent.model, session.project, agent.id].filter(Boolean).join(' ').toLocaleLowerCase('vi').includes(query)));
+  }
+  function hasFilters() { return Object.values(state.filters).some(Boolean); }
+
+  function preserveFocus(render) {
+    const active = document.activeElement;
+    const focusKey = active?.dataset.focusKey;
+    const scroll = $('inspector-content').querySelector('.inspector-body')?.scrollTop || 0;
+    render();
+    const body = $('inspector-content').querySelector('.inspector-body');
+    if (body) body.scrollTop = scroll;
+    if (focusKey) {
+      const target = [...document.querySelectorAll('[data-focus-key]')].find(n => n.dataset.focusKey === focusKey);
+      if (target) target.focus({ preventScroll: true });
+    }
+  }
+  function updateOptions() {
+    const ss = sessions();
+    const signature = ss.map(s => `${s.id}|${s.project}`).sort().join(';');
+    if (signature === state.optionSignature) return;
+    state.optionSignature = signature;
+    const projects = [...new Set(ss.map(s => s.project).filter(Boolean))].sort();
+    const project = $('project-filter'), session = $('session-filter');
+    project.replaceChildren(new Option('Tất cả dự án', ''));
+    projects.forEach(p => project.add(new Option(p, p)));
+    session.replaceChildren(new Option('Tất cả phiên', ''));
+    ss.forEach(s => session.add(new Option(`${s.project || 'Dự án'} · ${String(s.id).slice(0, 8)}`, s.id)));
+    if (!projects.includes(state.filters.project)) state.filters.project = '';
+    if (!ss.some(s => s.id === state.filters.session)) state.filters.session = '';
+    project.value = state.filters.project; session.value = state.filters.session;
+  }
+  function updateConnection() {
+    const info = state.snapshot?.source || {};
+    const isDemo = state.demo || info.mode === 'demo';
+    $('demo-notice').hidden = !isDemo;
+    $('paused-notice').hidden = !state.paused;
+    const hasActive = allRows().some(r => ['running', 'waiting'].includes(r.agent.status));
+    const latest = ms(info.latestEventAt);
+    const stale = latest !== null && now() - latest > (num(info.staleAfterMs) ?? 90000) && hasActive;
+    let label = 'Đang kết nối', cls = '';
+    if (isDemo) label = 'Bản xem thử · dữ liệu mẫu';
+    else if (state.paused) label = 'Đã tạm dừng cập nhật';
+    else if (state.error || info.connected === false) { label = 'Mất kết nối'; cls = 'is-offline'; }
+    else if (stale) { label = 'Chưa có sự kiện mới'; cls = 'is-stale'; }
+    else if (state.connected) { label = state.streamOpen ? 'Trực tiếp · trên máy này' : 'Đã nhận dữ liệu'; cls = 'is-live'; }
+    $('connection-label').textContent = label;
+    $('connection-status').className = `freshness ${cls}`;
+    const warnings = Array.isArray(info.warnings) ? info.warnings : [];
+    const message = state.error ? (state.snapshot ? 'Kết nối bị gián đoạn. Đang giữ bản dữ liệu cuối cùng; dữ liệu có thể đã cũ.' : 'Chưa kết nối được bộ thu thập. Hãy chạy server Agent Observatory, sau đó thử lại.')
+      : info.connected === false ? 'Bộ thu thập báo chưa kết nối. Dữ liệu hiển thị có thể chưa đầy đủ.'
+      : stale ? 'Một số agent còn mở nhưng chưa có sự kiện mới. Kiểm tra phiên Claude Code để xác nhận; không suy ra agent đã lỗi.'
+      : warnings.length ? String(warnings[0]) : '';
+    $('connection-notice').hidden = !message;
+    $('connection-message').textContent = message;
+    $('retry-button').hidden = !state.error && info.connected !== false;
+    $('updated-at').textContent = state.snapshot ? `Bản dữ liệu: ${fullDate(state.snapshot.generatedAt)}${state.paused ? ' · đang giữ nguyên' : ''}` : 'Chưa có bản cập nhật';
+  }
+  function renderMetrics(rows) {
+    if (!state.snapshot) return;
+    const running = rows.filter(r => r.agent.status === 'running').length;
+    const waiting = rows.filter(r => r.agent.status === 'waiting').length;
+    const errors = rows.filter(r => r.agent.status === 'error').length;
+    const toolCounts = rows.map(r => num(r.agent.toolCalls));
+    const toolsKnown = toolCounts.every(n => n !== null);
+    const count = new Set(rows.map(r => r.session.id)).size;
+    $('metric-running').textContent = numeric(running);
+    $('metric-attention').textContent = numeric(waiting + errors);
+    $('metric-tools').textContent = toolsKnown ? numeric(toolCounts.reduce((s, n) => s + n, 0)) : '—';
+    $('metric-sessions').textContent = numeric(count);
+    $('metric-running-note').textContent = `${rows.length} agent trong bộ lọc`;
+    $('metric-attention-note').textContent = `${waiting} chờ phản hồi · ${errors} có lỗi`;
+    const projects = new Set(rows.map(r => r.session.project));
+    $('metric-sessions-note').textContent = `${projects.size} dự án có agent phù hợp`;
+  }
+  function emptyState(type) {
+    const box = el('div', 'empty-state'); box.append(icon(type === 'no-match' ? 'search' : 'radar'));
+    if (type === 'loading') { box.append(el('h3', '', 'Đang kết nối bộ thu thập'), el('p', '', 'Dashboard sẽ hiển thị agents khi nhận được sự kiện từ Claude Code.')); }
+    else if (type === 'offline') { box.append(el('h3', '', 'Đang chờ kết nối'), el('p', '', 'Khởi động server cục bộ để quan sát các phiên Claude Code. Dữ liệu thật sẽ xuất hiện tại đây.')); }
+    else if (type === 'no-match') {
+      box.append(el('h3', '', 'Không có agent phù hợp'), el('p', '', 'Thử đổi dự án, trạng thái hoặc từ khóa. Các bộ lọc áp dụng cho cả số liệu và dòng thời gian.'));
+      const reset = el('button', 'text-button', 'Xóa tất cả bộ lọc'); reset.type = 'button'; reset.addEventListener('click', resetFilters); box.append(reset);
+    } else {
+      box.append(el('h3', '', 'Sẵn sàng quan sát agent đầu tiên'), el('p', '', 'Mở một phiên Claude Code đã tải plugin và bắt đầu công việc. Các agent và tool calls mới sẽ xuất hiện tự động.'));
+      const code = el('code', '', 'claude --plugin-dir ./plugin'); box.append(code);
+    }
+    return box;
+  }
+  function emptyType(rows) {
+    if (!state.snapshot) return state.error ? 'offline' : 'loading';
+    return !rows.length && hasFilters() ? 'no-match' : 'empty';
+  }
+  function depthOf(agent, session) {
+    const map = new Map((session.agents || []).map(a => [a.id, a]));
+    const visited = new Set([agent.id]); let depth = 0, current = agent;
+    while (current.parentId && map.has(current.parentId) && !visited.has(current.parentId) && depth < 4) {
+      visited.add(current.parentId); depth++; current = map.get(current.parentId);
+    }
+    return depth;
+  }
+  function hierarchical(rows) {
+    const byId = new Map(rows.map(r => [r.agent.id, r]));
+    const result = [], seen = new Set();
+    function walk(row) {
+      if (seen.has(row.key)) return; seen.add(row.key); result.push(row);
+      for (const child of rows) if (child.agent.parentId === row.agent.id) walk(child);
+    }
+    rows.filter(r => !r.agent.parentId || !byId.has(r.agent.parentId)).forEach(walk);
+    rows.forEach(walk); return result;
+  }
+  function selectAgent(rowKey, scroll = false) {
+    state.selected = rowKey;
+    render();
+    const row = allRows().find(r => r.key === rowKey);
+    if (row) announce(`Đã chọn ${row.agent.name || row.agent.type || 'agent'}. Chi tiết ở bảng bên cạnh.`);
+    if (scroll && window.innerWidth < 890) $('inspector').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+  function renderAgentList(rows) {
+    const list = $('agent-list'); list.replaceChildren();
+    $('agent-count').textContent = state.snapshot ? rows.length : '—';
+    if (!rows.length) list.append(emptyState(emptyType(rows)));
+    const grouped = new Map();
+    rows.forEach(row => { if (!grouped.has(row.session.id)) grouped.set(row.session.id, []); grouped.get(row.session.id).push(row); });
+    for (const group of grouped.values()) {
+      const session = group[0].session, section = el('div', 'session-group');
+      const header = el('div', 'session-header');
+      header.append(icon('folder'), el('span', 'session-project', session.project || 'Dự án chưa rõ'), el('span', '', '/'), el('span', 'session-id', String(session.id).slice(0, 12)));
+      const context = num(session.contextPercent);
+      const meta = el('span', 'session-meta', context === null ? 'Context —' : `Context ${Math.round(context)}%`);
+      meta.title = 'Context của phiên; không phải tỷ lệ hoàn thành công việc.'; header.append(meta); section.append(header);
+      for (const row of hierarchical(group)) {
+        const { agent } = row, selected = state.selected === row.key;
+        const button = el('button', `agent-row${selected ? ' selected' : ''}`);
+        button.type = 'button'; button.dataset.focusKey = `agent:${row.key}`; button.dataset.agentId = agent.id;
+        button.setAttribute('aria-pressed', String(selected));
+        button.setAttribute('aria-label', `${agent.name || agent.type || 'Agent'}, ${statusLabels[statusOf(agent.status)]}, ${numeric(agent.toolCalls)} tool calls. Xem chi tiết.`);
+        const depth = depthOf(agent, session), identity = el('span', `agent-identity${depth ? ' is-child' : ''}`);
+        identity.style.setProperty('--depth', `${Math.min(depth, 2) * 15}px`);
+        const avatar = el('span', `agent-avatar${agent.type === 'main' ? ' coordinator' : ''}`, initials(agent)); avatar.setAttribute('aria-hidden', 'true');
+        const copy = el('span', 'agent-copy'); copy.append(el('span', 'agent-name', agent.name || agent.type || 'Agent'));
+        const task = el('span', 'agent-task', agent.task || (agent.type === 'main' ? 'Điều phối phiên làm việc' : 'Chưa có mô tả công việc')); task.title = task.textContent;
+        copy.append(task, el('span', 'agent-model', modelLabel(agent.model)));
+        identity.append(avatar, copy);
+        button.append(identity, badge(agent.status), el('span', 'tool-count', numeric(agent.toolCalls)), el('span', 'elapsed', duration(agent.startedAt, agent.endedAt)), el('span', 'row-chevron', '↗'));
+        button.addEventListener('click', () => selectAgent(row.key, true)); section.append(button);
+      }
+      list.append(section);
+    }
+    $('filter-summary').textContent = state.snapshot ? `${rows.length} / ${allRows().length} agent${hasFilters() ? ' · đang áp dụng bộ lọc' : ' · toàn bộ dữ liệu đã ghi nhận'}` : 'Đang lấy dữ liệu…';
+  }
+  function renderTimeline(rows) {
+    const host = $('timeline'); host.replaceChildren();
+    $('timeline-history-note').textContent = rows.some(r => num(r.agent.toolCalls) !== null && (r.agent.tools || []).length < r.agent.toolCalls)
+      ? 'Chỉ vẽ tool calls còn trong lịch sử được giữ' : 'Khoảng trống = không có tool ghi nhận';
+    if (!rows.length) { host.append(el('div', 'timeline-empty', hasFilters() ? 'Không có agent trong bộ lọc hiện tại.' : 'Dòng thời gian sẽ xuất hiện khi có sự kiện.')); $('timeline-range').textContent = 'Thời gian từ dữ liệu'; return; }
+    const starts = rows.map(r => ms(r.agent.startedAt)).filter(n => n !== null);
+    const ends = rows.map(r => ms(r.agent.endedAt) ?? (['completed', 'error'].includes(r.agent.status) ? ms(r.agent.lastEventAt) : now())).filter(n => n !== null);
+    if (!starts.length || !ends.length) { host.append(el('div', 'timeline-empty', 'Chưa có mốc thời gian để vẽ.')); return; }
+    const start = Math.min(...starts), end = Math.max(start + 1000, ...ends), range = end - start;
+    $('timeline-range').textContent = `${clock(new Date(start).toISOString())} — ${clock(new Date(end).toISOString())}`;
+    const axis = el('div', 'timeline-axis'); axis.append(el('span', 'timeline-axis-label', 'AGENT'));
+    const ticks = el('div', 'timeline-ticks');
+    [0, 25, 50, 75, 100].forEach(percent => { const tick = el('span', '', clock(new Date(start + range * percent / 100).toISOString(), range < 120000)); tick.style.left = `${percent}%`; ticks.append(tick); });
+    axis.append(ticks); host.append(axis);
+    for (const row of rows) {
+      const { agent } = row;
+      const button = el('button', `timeline-row${row.key === state.selected ? ' selected' : ''}`); button.type = 'button'; button.dataset.focusKey = `timeline:${row.key}`;
+      button.setAttribute('aria-label', `${agent.name || agent.type}: ${duration(agent.startedAt, agent.endedAt)}, ${numeric(agent.toolCalls)} tool calls. Xem chi tiết.`);
+      button.append(el('span', 'timeline-name', agent.name || agent.type || 'Agent'));
+      const track = el('span', 'timeline-track'); track.setAttribute('aria-hidden', 'true');
+      const a = ms(agent.startedAt), b = ms(agent.endedAt) ?? (['completed', 'error'].includes(agent.status) ? ms(agent.lastEventAt) : now());
+      if (a !== null && b !== null) { const life = el('span', `lifetime ${statusOf(agent.status)}`); positionSegment(life, a, b, start, end); track.append(life); }
+      for (const tool of Array.isArray(agent.tools) ? agent.tools : []) {
+        const s = ms(tool.startedAt); if (s === null) continue;
+        const e = ms(tool.endedAt) ?? (tool.status === 'running' ? end : s + Math.max(1, num(tool.durationMs) ?? 1));
+        const segment = el('span', `tool-segment${tool.status === 'running' ? ' is-running' : ''}${['error', 'denied'].includes(tool.status) ? ' is-error' : ''}`);
+        positionSegment(segment, s, e, start, end);
+        segment.title = `${tool.name}: ${toolStatus(tool.status)} · ${clock(tool.startedAt, true)}`;
+        track.append(segment);
+      }
+      button.append(track); button.addEventListener('click', () => selectAgent(row.key, true)); host.append(button);
+    }
+  }
+  function positionSegment(element, a, b, start, end) {
+    const left = Math.max(0, Math.min(100, (a - start) / (end - start) * 100));
+    const right = Math.max(left, Math.min(100, (b - start) / (end - start) * 100));
+    element.style.left = `${left}%`; element.style.width = `${right - left}%`;
+  }
+  function filteredEvents(rows) {
+    const result = new Map();
+    for (const row of rows) {
+      const events = [...(row.agent.events || []), ...(row.session.events || []).filter(e => e.agentId === row.agent.id)];
+      for (const event of events) {
+        const id = `${row.session.id}:${event.id || `${event.timestamp}:${event.type}:${event.agentId}:${event.title}`}`;
+        if (!result.has(id)) result.set(id, { ...event, row });
+      }
+    }
+    return [...result.values()].sort((a, b) => (ms(b.timestamp) ?? 0) - (ms(a.timestamp) ?? 0));
+  }
+  function renderActivity(rows) {
+    const host = $('activity-list'); host.replaceChildren();
+    const events = filteredEvents(rows); $('event-count').textContent = state.snapshot ? events.length : '—';
+    if (!events.length) { host.append(el('div', 'empty-state', rows.length ? 'Chưa có sự kiện cho các agent này.' : 'Không có hoạt động trong bộ lọc hiện tại.')); return; }
+    for (const event of events.slice(0, 80)) {
+      const item = el('div', 'activity-entry');
+      item.append(el('span', `event-mark${event.status === 'error' ? ' error' : ''}`));
+      const content = el('div'); content.append(el('div', 'activity-title', event.title || event.type || 'Sự kiện'));
+      if (event.detail) content.append(el('div', 'activity-detail', event.detail));
+      const agent = el('button', 'activity-agent', `${event.row.agent.name || event.row.agent.type} · ${event.row.session.project}`);
+      agent.type = 'button'; agent.dataset.focusKey = `event:${event.id || event.timestamp}:${event.row.key}`; agent.addEventListener('click', () => selectAgent(event.row.key, true)); content.append(agent);
+      const time = el('time', 'activity-time', clock(event.timestamp, true)); time.dateTime = event.timestamp || ''; time.title = fullDate(event.timestamp);
+      item.append(content, time); host.append(item);
+    }
+  }
+  function detailField(label, value, mono = false) {
+    const item = el('div'); item.append(el('span', 'detail-label', label), el('span', `detail-value${mono ? ' mono' : ''}`, value)); return item;
+  }
+  function inspectorSection(title) { const section = el('section', 'inspector-section'); section.append(el('h3', '', title)); return section; }
+  function renderInspector(rows) {
+    const row = rows.find(r => r.key === state.selected);
+    $('inspector-empty').hidden = Boolean(row); $('inspector-content').hidden = !row;
+    const host = $('inspector-content'); host.replaceChildren(); if (!row) return;
+    const { agent, session } = row;
+    const head = el('header', 'inspector-header');
+    const kicker = el('div', 'inspector-kicker'); kicker.append(el('span', '', 'AGENT ĐƯỢC CHỌN'), icon('arrow')); head.append(kicker);
+    const titleRow = el('div', 'inspector-title-row'); titleRow.append(el('span', 'inspector-avatar', initials(agent)));
+    const titleCopy = el('div'); const title = el('h2', 'inspector-title', agent.name || agent.type || 'Agent'); title.id = 'inspector-heading';
+    titleCopy.append(title, badge(agent.status)); titleRow.append(titleCopy); head.append(titleRow);
+    head.append(el('p', 'inspector-task', agent.task || (agent.type === 'main' ? 'Điều phối công việc trong phiên này.' : 'Agent chưa cung cấp mô tả công việc.'))); host.append(head);
+    const meta = el('div', 'inspector-meta');
+    meta.append(detailField('MODEL', agent.model ? modelLabel(agent.model) : '—', true), detailField('THỜI GIAN', duration(agent.startedAt, agent.endedAt), true), detailField('TOOL CALLS', numeric(agent.toolCalls), true), detailField('LỖI GHI NHẬN', numeric(agent.errors), true)); host.append(meta);
+    const tabs = el('div', 'inspector-tabs'); tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Chi tiết agent');
+    for (const [value, label] of [['overview', 'Tổng quan'], ['tools', 'Tools'], ['files', 'Tệp']]) {
+      const button = el('button', 'inspector-tab', label); button.type = 'button'; button.id = `inspector-tab-${value}`; button.setAttribute('role', 'tab'); button.setAttribute('aria-selected', String(state.inspectorTab === value)); button.setAttribute('aria-controls', 'inspector-body'); button.tabIndex = state.inspectorTab === value ? 0 : -1; button.dataset.focusKey = `inspect:${value}`;
+      button.addEventListener('click', () => { state.inspectorTab = value; preserveFocus(() => renderInspector(filteredRows())); });
+      button.addEventListener('keydown', event => { if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return; event.preventDefault(); const vals = ['overview', 'tools', 'files']; let index = vals.indexOf(value); index = event.key === 'Home' ? 0 : event.key === 'End' ? 2 : (index + (event.key === 'ArrowRight' ? 1 : -1) + 3) % 3; state.inspectorTab = vals[index]; renderInspector(filteredRows()); $(`inspector-tab-${vals[index]}`).focus(); });
+      tabs.append(button);
+    }
+    host.append(tabs);
+    const body = el('div', 'inspector-body'); body.id = 'inspector-body'; body.setAttribute('role', 'tabpanel'); body.setAttribute('aria-labelledby', `inspector-tab-${state.inspectorTab}`); body.tabIndex = 0; body.dataset.focusKey = `inspector-body:${row.key}`;
+    if (state.inspectorTab === 'overview') {
+      const sessionSection = inspectorSection('PHIÊN CHỨA AGENT');
+      sessionSection.append(el('p', 'session-usage-project', `${session.project || 'Dự án'} · ${String(session.id).slice(0, 12)}`));
+      const sessionStats = el('div', 'session-usage-stats');
+      const context = num(session.contextPercent);
+      sessionStats.append(detailField('CONTEXT CỦA PHIÊN', context === null ? '—' : `${Math.round(context)}%`, true));
+      sessionStats.append(detailField(session.costEstimated === false ? 'CHI PHÍ PHIÊN' : 'ƯỚC TÍNH CHI PHÍ PHIÊN', costLabel(session), true));
+      sessionSection.append(sessionStats);
+      if (context !== null) {
+        const meter = el('div', 'usage-meter'); meter.setAttribute('role', 'meter'); meter.setAttribute('aria-label', 'Context của phiên đã sử dụng'); meter.setAttribute('aria-valuemin', '0'); meter.setAttribute('aria-valuemax', '100'); meter.setAttribute('aria-valuenow', String(Math.min(100, context))); meter.setAttribute('aria-valuetext', `${context}%`);
+        const fill = el('span'); fill.style.width = `${Math.max(0, Math.min(100, context))}%`; meter.append(fill); sessionSection.append(meter);
+      }
+      sessionSection.append(el('p', 'detail-note', 'Chi phí thuộc toàn phiên, không phải chi phí riêng của agent đang chọn. — là chưa có số liệu đầy đủ.'));
+      const limits = Array.isArray(session.rateLimits) ? session.rateLimits : [];
+      if (!limits.length) sessionSection.append(el('p', 'detail-note', 'Hạn mức: — · runtime chưa báo dữ liệu.'));
+      else {
+        const limitLabels = { five_hour: 'Hạn mức 5 giờ', seven_day: 'Hạn mức 7 ngày', '5h': 'Hạn mức 5 giờ', '7d': 'Hạn mức 7 ngày', spend_limit: 'Hạn mức chi tiêu' };
+        const list = el('div', 'quota-list');
+        for (const limit of limits) {
+          const item = el('div', 'quota-item'); const top = el('div', 'quota-heading');
+          const percent = num(limit.percentUsed);
+          top.append(el('span', '', limitLabels[limit.kind] || `Hạn mức ${String(limit.kind || 'chưa rõ').replaceAll('_', ' ')}`), el('strong', '', percent === null ? '—' : `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1 }).format(percent)}%`));
+          item.append(top);
+          item.append(el('div', 'detail-time', ms(limit.resetsAt) === null ? 'Chưa có thời điểm reset' : `Reset: ${fullDate(limit.resetsAt)}`));
+          list.append(item);
+        }
+        sessionSection.append(list, el('p', 'detail-note', 'Hạn mức do runtime báo; không phải tỷ lệ hoàn thành công việc.'));
+      }
+      body.append(sessionSection);
+      const section = inspectorSection('TOKEN ĐƯỢC BÁO CÁO'); const grid = el('div', 'token-grid');
+      for (const [label, prop] of [['Input', 'input'], ['Output', 'output'], ['Cache read', 'cacheRead'], ['Cache write', 'cacheWrite']]) { const cell = el('div', 'token-item'); cell.append(el('span', '', label), el('strong', '', shortNum(agent.tokens?.[prop]))); grid.append(cell); }
+      section.append(grid, el('p', 'detail-note', '— nghĩa là runtime chưa báo dữ liệu. Không ước tính token từ thời gian chạy.'));
+      if (num(agent.costUsd) !== null) {
+        const estimated = agent.costEstimated !== false;
+        const label = estimated ? 'Chi phí ước tính' : 'Chi phí runtime báo';
+        section.append(el('p', 'detail-note', `${label} của agent: ${costLabel(agent)}`));
+      }
+      body.append(section);
+      const events = [...(agent.events || [])].sort((a, b) => (ms(b.timestamp) ?? 0) - (ms(a.timestamp) ?? 0)).slice(0, 4);
+      const recent = inspectorSection('CÁC BƯỚC GẦN NHẤT');
+      if (!events.length) recent.append(el('p', 'detail-empty', 'Chưa có sự kiện được ghi nhận.'));
+      else {
+        const list = el('div', 'detail-list');
+        for (const event of events) { const item = el('div', 'detail-event'); item.append(el('span', 'detail-event-dot')); const copy = el('div'); copy.append(el('div', 'detail-event-name', event.title || event.type)); if (event.detail) copy.append(el('div', 'detail-event-copy', event.detail)); copy.append(el('div', 'detail-time', clock(event.timestamp, true))); item.append(copy); list.append(item); }
+        recent.append(list);
+      }
+      body.append(recent);
+      const tasks = (session.tasks || []).filter(t => t.owner === agent.id || t.owner === agent.name || (!t.owner && agent.type === 'main'));
+      if (tasks.length) {
+        const taskSection = inspectorSection('CÔNG VIỆC TRONG PHIÊN'); const list = el('div', 'detail-list');
+        for (const task of tasks) { const item = el('div', 'task-item'); const marks = { completed: '✓', in_progress: '◐', pending: '○' }; const marker = el('span', 'task-marker', marks[task.status] || '—'); marker.setAttribute('aria-label', task.status === 'completed' ? 'Đã xong' : task.status === 'in_progress' ? 'Đang làm' : 'Đang chờ'); item.append(marker, el('span', '', task.subject || task.id)); list.append(item); }
+        taskSection.append(list); body.append(taskSection);
+      }
+    } else if (state.inspectorTab === 'tools') {
+      const tools = [...(agent.tools || [])].sort((a, b) => (ms(b.startedAt) ?? 0) - (ms(a.startedAt) ?? 0));
+      if (num(agent.toolCalls) !== null && tools.length < agent.toolCalls) body.append(el('p', 'detail-note retained-history-note', `Hiển thị ${tools.length} tool call gần nhất trong ${numeric(agent.toolCalls)} lần đã ghi nhận. Lịch sử cũ hơn đã được giới hạn trong bản dữ liệu.`));
+      if (!tools.length) body.append(el('p', 'detail-empty', 'Chưa có tool call được ghi nhận cho agent này.'));
+      for (const tool of tools) {
+        const item = el('div', 'tool-detail'); const top = el('div', 'tool-detail-top'); top.append(el('span', '', tool.name || 'Tool'), el('span', 'status', toolStatus(tool.status))); item.append(top);
+        if (tool.summary) item.append(el('div', 'tool-detail-summary', tool.summary));
+        const latency = num(tool.durationMs) === null ? 'Thời gian chưa được báo' : tool.durationMs < 1000 ? `${tool.durationMs} ms` : `${(tool.durationMs / 1000).toFixed(1)} s`;
+        item.append(el('div', 'tool-detail-time', `${clock(tool.startedAt, true)} · ${latency}`)); body.append(item);
+      }
+    } else {
+      const files = [...new Set((agent.files || []).map(f => typeof f === 'string' ? f : f.path).filter(Boolean))];
+      if (!files.length) body.append(el('p', 'detail-empty', 'Chưa có tệp được ghi nhận. Không có dữ liệu không có nghĩa agent chưa thao tác tệp.'));
+      for (const file of files) { const item = el('div', 'file-row'); item.append(icon('file'), el('span', '', file)); body.append(item); }
+    }
+    host.append(body);
+    const footer = el('div', 'inspector-footer'); footer.append(el('div', '', `${session.project || 'Dự án'} · ${String(agent.id)}`));
+    footer.append(el('div', '', `Sự kiện cuối: ${relative(agent.lastEventAt)}`));
+    if (agent.parentId) footer.append(el('div', '', `Agent cha: ${(session.agents || []).find(a => a.id === agent.parentId)?.name || agent.parentId}`));
+    footer.append(el('div', '', '“Đã kết thúc” là vòng đời agent, không phải kết luận test PASS.')); host.append(footer);
+  }
+  function render() {
+    updateOptions(); const rows = filteredRows();
+    if (!rows.some(r => r.key === state.selected)) {
+      const preferred = rows.find(r => r.agent.status === 'waiting') || rows.find(r => r.agent.status === 'running' && r.agent.type !== 'main') || rows[0];
+      state.selected = preferred?.key || null;
+    }
+    preserveFocus(() => { renderMetrics(rows); renderAgentList(rows); renderTimeline(rows); renderActivity(rows); renderInspector(rows); });
+    $('reset-filters').hidden = !hasFilters(); updateConnection();
+  }
+  function setSnapshot(snapshot) {
+    if (!snapshot || !Array.isArray(snapshot.sessions) || snapshot.schemaVersion !== 1) throw new Error('Unsupported snapshot');
+    if (state.paused) { state.pending = snapshot; return; }
+    state.snapshot = snapshot; state.demo = snapshot.source?.mode === 'demo' || params.get('demo') === '1'; state.connected = true; state.error = null; state.lastFetch = Date.now(); render();
+  }
+  function resetFilters() {
+    state.filters = { search: '', project: '', session: '', status: '' };
+    $('search-input').value = ''; $('project-filter').value = ''; $('session-filter').value = ''; $('status-filter').value = ''; render(); announce('Đã xóa toàn bộ bộ lọc.');
+  }
+  function setView(view) {
+    if (!Object.hasOwn(viewNames, view)) view = 'overview';
+    state.view = view; document.body.dataset.view = view;
+    $('page-title').replaceChildren(document.createTextNode(viewNames[view][0]), el('span', 'title-dot', '.'));
+    $('page-subtitle').textContent = viewNames[view][1];
+    document.querySelectorAll('.nav-item[data-view]').forEach(button => { const active = button.dataset.view === view; button.classList.toggle('active', active); if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current'); button.setAttribute('aria-label', viewNames[button.dataset.view][0]); });
+    try { const url = new URL(location.href); url.hash = view === 'overview' ? '' : view; history.replaceState(null, '', url); } catch { /* file preview may not permit history writes */ }
+  }
+  function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    $('theme-button').replaceChildren(icon(theme === 'dark' ? 'sun' : 'moon'));
+    $('theme-button').setAttribute('aria-label', theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối');
+    try { localStorage.setItem('agent-observatory-theme', theme); } catch { /* embedded previews can deny storage */ }
+  }
+  function togglePause() {
+    state.paused = !state.paused; $('pause-button').setAttribute('aria-pressed', String(state.paused));
+    $('pause-button').setAttribute('aria-label', state.paused ? 'Tiếp tục cập nhật màn hình' : 'Tạm dừng cập nhật màn hình');
+    const holder = $('pause-button').querySelector('[data-icon]'); holder.dataset.icon = state.paused ? 'play' : 'pause'; holder.replaceChildren(icon(holder.dataset.icon));
+    $('pause-label').textContent = state.paused ? 'Tiếp tục cập nhật' : 'Tạm dừng cập nhật';
+    if (!state.paused && state.pending) { const snapshot = state.pending; state.pending = null; setSnapshot(snapshot); }
+    else updateConnection();
+    announce(state.paused ? 'Đã tạm dừng cập nhật màn hình. Agents vẫn tiếp tục làm việc.' : 'Đã tiếp tục cập nhật màn hình.');
+  }
+  async function fetchSnapshot() {
+    if (state.static) { render(); announce('Đây là bản xem thử tĩnh với dữ liệu mẫu.'); return; }
+    const request = ++state.request;
+    state.loading = true; $('refresh-button').disabled = true;
+    try {
+      const url = location.protocol === 'file:' ? './demo.json' : `/api/state${params.get('demo') === '1' ? '?demo=1' : ''}`;
+      if (location.protocol === 'file:' && !state.demo) throw new Error('Server required');
+      const response = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const snapshot = await response.json(); if (request !== state.request) return;
+      setSnapshot(snapshot); state.connected = true; state.error = null; updateConnection();
+    } catch (error) {
+      if (request !== state.request) return;
+      state.connected = false; state.error = error.message; render();
+    } finally {
+      if (request === state.request) { state.loading = false; $('refresh-button').disabled = false; }
+    }
+  }
+  function connectStream() {
+    if (state.static || location.protocol === 'file:' || !window.EventSource) return;
+    state.source?.close();
+    const stream = new EventSource(`/api/events${params.get('demo') === '1' ? '?demo=1' : ''}`); state.source = stream;
+    stream.onopen = () => { state.streamOpen = true; state.connected = true; state.error = null; updateConnection(); };
+    stream.addEventListener('snapshot', event => {
+      try { setSnapshot(JSON.parse(event.data)); } catch { state.error = 'Dữ liệu cập nhật không hợp lệ'; updateConnection(); }
+    });
+    stream.addEventListener('source-error', () => { state.error = 'Bộ thu thập chưa đọc được dữ liệu cục bộ'; updateConnection(); });
+    stream.onerror = () => { state.streamOpen = false; state.error = 'Kết nối cập nhật bị gián đoạn'; updateConnection(); };
+  }
+
+  hydrateIcons();
+  let storedTheme = null; try { storedTheme = localStorage.getItem('agent-observatory-theme'); } catch { /* optional */ }
+  setTheme(storedTheme === 'dark' ? 'dark' : 'light');
+  setView(location.hash.slice(1));
+  $('timezone-label').textContent = `Múi giờ: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+  if (location.protocol === 'file:' || state.static) $('live-link').href = 'http://127.0.0.1:47831/';
+  document.querySelectorAll('.nav-item[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+  const officeLink = $('office-window-link');
+  function officeUrl() {
+    if (state.static) return './agent-observatory-office-preview.html';
+    const query = new URLSearchParams();
+    if (state.demo || params.get('demo') === '1') query.set('demo', '1');
+    if (state.filters.project) query.set('project', state.filters.project);
+    if (state.filters.session) query.set('session', state.filters.session);
+    if (state.filters.search) query.set('q', state.filters.search);
+    return `/office${query.size ? '?' + query.toString() : ''}`;
+  }
+  officeLink.href = officeUrl();
+  officeLink.addEventListener('click', event => {
+    officeLink.href = officeUrl();
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    const popup = window.open(officeLink.href, 'agent-observatory-office', 'popup,width=1400,height=900');
+    if (popup) { popup.opener = null; event.preventDefault(); }
+  });
+  $('search-input').addEventListener('input', event => { state.filters.search = event.target.value; render(); });
+  for (const name of ['project', 'session', 'status']) $(`${name}-filter`).addEventListener('change', event => { state.filters[name] = event.target.value; render(); announce(`${filteredRows().length} agent phù hợp với bộ lọc.`); });
+  $('reset-filters').addEventListener('click', resetFilters);
+  $('theme-button').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+  $('pause-button').addEventListener('click', togglePause);
+  $('refresh-button').addEventListener('click', () => { fetchSnapshot(); if (!state.streamOpen) connectStream(); });
+  $('retry-button').addEventListener('click', () => { fetchSnapshot(); connectStream(); });
+  document.addEventListener('keydown', event => {
+    if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { event.preventDefault(); $('search-input').focus(); }
+    if (event.key === 'Escape' && document.activeElement === $('search-input')) { $('search-input').value = ''; state.filters.search = ''; render(); }
+  });
+  window.addEventListener('hashchange', () => setView(location.hash.slice(1)));
+  window.addEventListener('beforeunload', () => state.source?.close());
+  window.AgentObservatory = Object.freeze({ setSnapshot, getState: () => ({ filters: { ...state.filters }, selected: state.selected, paused: state.paused, view: state.view }) });
+  if (window.__AGENT_OBSERVATORY_SNAPSHOT__) {
+    const snapshot = window.__AGENT_OBSERVATORY_SNAPSHOT__;
+    setSnapshot({ ...snapshot, source: { ...snapshot.source, mode: 'demo' } });
+  } else { render(); fetchSnapshot().then(connectStream); }
+  setInterval(() => { if (!state.paused && !state.static && state.snapshot) render(); }, 10000);
+})();
+</script>
+</body>
+</html>
